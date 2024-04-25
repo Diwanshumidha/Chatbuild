@@ -1,5 +1,5 @@
 {
-  "name": "chatbuild_packages",
+  "name": "chat_build",
   "private": true,
   "scripts": {
     "build": "turbo build",
