@@ -6,15 +6,18 @@ import dts from "vite-plugin-dts";
 export default defineConfig({
   plugins: [react(), dts({ include: ["lib"] })],
   build: {
-    minify: true,
     copyPublicDir: false,
     lib: {
       entry: resolve(__dirname, "lib/main.tsx"),
       formats: ["es"],
     },
     rollupOptions: {
+      output: {
+        entryFileNames: "index.js",
+        chunkFileNames: "",
+        assetFileNames: "index.css",
+      },
       external: ["react", "react/jsx-runtime", "react-dom"],
     },
-    
   },
 });

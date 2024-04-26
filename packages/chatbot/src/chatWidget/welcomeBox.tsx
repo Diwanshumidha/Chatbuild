@@ -22,7 +22,7 @@ const WelcomeBox = ({
     >
       <div className=" cb-right-2 cb-top-3 cb-absolute">
         <button
-          className="hover:cb-text-chatbot_foreground/40 "
+          className="hover:cb-text-chatbot_foreground/40 cb-bg-transparent "
           onClick={() => setIsWelcomeBoxOpen(false)}
         >
           <IoClose />

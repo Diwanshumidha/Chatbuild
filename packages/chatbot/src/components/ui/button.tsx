@@ -17,7 +17,7 @@ const buttonVariants = cva(
         secondary:
           "cb-bg-chatbot_secondary cb-text-chatbot_secondary-foreground hover:cb-bg-chatbot_secondary/80",
         ghost:
-          "hover:cb-bg-chatbot_accent hover:cb-text-chatbot_accent-foreground",
+          "hover:cb-bg-chatbot_accent hover:cb-text-chatbot_accent-foreground cb-bg-transparent",
         link: "cb-text-chatbot_primary cb-underline-offset-4 hover:cb-underline",
       },
       size: {

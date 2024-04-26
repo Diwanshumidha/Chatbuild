@@ -95,11 +95,11 @@ const MessageForm = ({ apiKey, scrollToBottom }: MessageFormProps) => {
           value={userMessage}
           disabled={!threadId || generationLoading || threadLoading}
           onChange={(e) => setUserMessage(e.target.value)}
-          className="chatbot-widget__message-form--input cb-flex-1 cb-py-2 focus:cb-outline-none cb-bg-transparent "
+          className="chatbot-widget__message-form--input cb-flex-1 cb-py-2 focus:cb-outline-none   "
         />
         <button
           type="submit"
-          className="cb-border-s-0 chatbot-widget__message-form--submit cb-text-chatbot_primary disabled:cb-opacity-55 "
+          className="cb-border-s-0 chatbot-widget__message-form--submit cb-bg-transparent cb-text-chatbot_primary disabled:cb-opacity-55 "
           disabled={
             !threadId || generationLoading || userMessage.trim().length <= 0
           }
