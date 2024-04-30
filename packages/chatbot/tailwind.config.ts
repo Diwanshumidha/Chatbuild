@@ -4,7 +4,7 @@ const config = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   prefix: "cb-",
   corePlugins: {
-    preflight: false,
+    preflight: true,
   },
   theme: {
     container: {
