@@ -24,12 +24,16 @@ export class SocketHandler {
     io.on("connection", (socket: Socket) => {
       console.log("New client connected");
 
-      socket.on("join", ({ name, role, villageId }: JoinPayload) => {
-        let village = Village.getVillage(villageId);
 
-        if (!role || !villageId || (role !== "agent" && role !== "consumer")) {
+      socket.on("join", ({ name, role, villageId }: JoinPayload) => {
+        if (!role || !villageId) {
+          console.log({role,villageId})
           socket.emit("error", "Missing role or villageId");
+          return
         }
+        console.log({name,villageId})
+
+        let village = Village.getVillage(villageId);
 
         if (!village) {
           // TODO: Add Logic for checking the villageId

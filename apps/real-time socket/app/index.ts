@@ -11,7 +11,11 @@ const PORT = process.env.PORT;
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 app.get("/", (req, res) => {
   res.send("Hello");
@@ -32,6 +36,20 @@ app.get("/waitlist/:villageId", (req, res) => {
   }
   const waitlist = village.consumerWaitlist;
   res.json({ waitlist });
+});
+
+app.get("/agents/:villageId", (req, res) => {
+  const villageId = req.params.villageId;
+  if (!villageId || typeof villageId !== "string") {
+    return res.send("Not Found");
+  }
+  const village = Village.getVillage(villageId);
+
+  if (!village) {
+    return res.send("Not Found");
+  }
+  const agents = village.availableAgents;
+  res.json({ agents });
 });
 
 new SocketHandler(io);
