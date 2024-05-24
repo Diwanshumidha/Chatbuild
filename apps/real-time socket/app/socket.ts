@@ -1,139 +1,91 @@
 import { Server, Socket } from "socket.io";
+import { handleDisconnection } from "./lib/utils";
+import { Village } from "./village";
 
-export const villages: Village[] = [];
-// Fix this make a socketHandler
-export const rooms:Room[] = []
+type JoinPayload = {
+  name: string;
+  villageId: string;
+  role: "agent" | "consumer";
+};
 
+type CreateRoomPayload = {
+  villageId: string;
+  consumerId: string;
+};
 
+type MessagePayload = {
+  villageId: string;
+  roomId: string;
+  message: string;
+};
 
-export class Village {
-    public villageId: string;
-    public name: string;
-    public consumer_waitlist:Consumer[]
-    public available_Agents:Agent[]
-    public rooms:Room[]
-    public io:Server
-    
+export class SocketHandler {
+  constructor(private io: Server) {
+    io.on("connection", (socket: Socket) => {
+      console.log("New client connected");
 
-    constructor(villageId: string, name: string, io:Server) {
-        this.villageId = villageId;
-        this.name = name;
-        this.consumer_waitlist = []
-        this.available_Agents = []
-        this.rooms = []
-        this.io = io
+      socket.on("join", ({ name, role, villageId }: JoinPayload) => {
+        let village = Village.getVillage(villageId);
 
-        villages.push(this);
-        console.log("Yeah You entered the village");
-    }
-
-    getVillage(villageId: string): Village | undefined {
-        return villages.find((village) => village.villageId === villageId);
-    }
-
-    joinConsumer(socketId:string, name:string){
-        const consumer = new Consumer(socketId,name)
-        this.consumer_waitlist.push(consumer)
-    }
-
-    joinAgent(socketId:string, name:string){
-        const agent = new Agent(socketId,name)
-        this.available_Agents.push(agent)
-    }
-
-
-
-    getAgents(){
-        const agents = this.available_Agents
-        return agents.map(agent => agent.socketId)
-    }
-
-    getWaitlistUsers(){
-        const users = this.consumer_waitlist
-        return users.map(user => ({name:user.consumerName, socketId:user.socketId}))
-    }
-
-
-    makeRoom(agentId:string,consumerId:string){
-        const agent = this.available_Agents.find((agent) => agent.socketId === agentId)
-        const consumer = this.consumer_waitlist.find((consumer)=>consumer.socketId === consumerId)
-
-        if(!agent || !consumer){
-            return
+        if (!role || !villageId || (role !== "agent" && role !== "consumer")) {
+          socket.emit("error", "Missing role or villageId");
         }
 
-        const room = new Room(agent,consumer, this)
-        rooms.push(room)
-    }
+        if (!village) {
+          // TODO: Add Logic for checking the villageId
 
-    
-
-
-
-    deleteVillage(villageId: string): void {
-        const index = villages.findIndex((village) => village.villageId === villageId);
-        if (index !== -1) {
-            villages.splice(index, 1);
-            console.log("Village deleted successfully");
-        } else {
-            console.log("Village not found");
+          village = new Village(villageId, "Village ABC", io);
         }
-    }
-}
 
-class Agent {
-    public socketId:string;
-    public agentName:string;
-
-    constructor(socketId:string,agentName:string){
-        this.socketId = socketId
-        this.agentName = agentName
-    }
-
-}
-
-class Consumer {
-    public socketId:string;
-    public consumerName:string;
-
-    constructor(socketId:string,consumerName:string){
-        this.socketId = socketId
-        this.consumerName = consumerName
-    }
-}
-
-class Room {
-    public agent:Agent
-    public consumer:Consumer
-    private village:Village
-    public roomId:string | null
-
-
-    constructor(agent:Agent,consumer:Consumer, village:Village){
-        this.agent = agent
-        this.consumer = consumer
-        this.village = village
-
-        const io = village.io
-        const socket = io.sockets.sockets.get(agent.socketId) 
-        if(!socket){
-            this.roomId = null
-            return
+        if (role === "consumer") {
+          village.joinConsumer(socket.id, name);
+        } else if (role === "agent") {
+          village.joinAgent(socket.id, name);
         }
-        const roomId = `room-${agent.socketId}-${consumer.socketId}`;
 
-        console.log(roomId,this.agent,this.consumer)
-        socket.join(roomId)
-        io.to(consumer.socketId).socketsJoin(roomId);
-        socket.to(consumer.socketId).emit("agent-joined", { roomId, agentId: agent.socketId });
+        socket.emit("joinedVillage", { villageId, name, role });
+      });
 
-        this.roomId = roomId
-    }
+      socket.on(
+        "createRoom",
+        ({ villageId, consumerId }: CreateRoomPayload) => {
+          console.log({ villageId, consumerId });
+          const village = Village.getVillage(villageId);
+          const agent = village?.getAgentById(socket.id);
 
+          if (!agent) {
+            socket.emit("error", {
+              message: "No Agent Found",
+            });
+          }
 
-    sendMessage(socket: Socket, roomId: string, message: string) {
-        this.village.io.to(roomId).emit("message", { senderId: socket.id, message });
-    }
+          if (village) {
+            const roomId = village.makeRoom(socket.id, consumerId);
+            if (roomId) {
+              socket.emit("roomCreated", { roomId });
+            } else {
+              socket.emit("error", {
+                message: "Unable to create room",
+              });
+            }
+          }
+        }
+      );
 
-    
+      socket.on("message", ({ villageId, roomId, message }: MessagePayload) => {
+        const village = Village.getVillage(villageId);
+        if (village) {
+          const room = village.rooms.find((room) => room.roomId === roomId);
+          if (room) {
+            room.sendMessage(socket, message);
+          }
+        }
+      });
+
+      socket.on("disconnect", () => {
+        console.log("Client disconnected");
+        handleDisconnection(socket.id);
+      });
+    });
+  }
 }
