@@ -1,8 +1,14 @@
+import { Socket } from "socket.io";
+
 export class Agent {
   public socketId: string;
   public agentName: string;
 
-  constructor(socketId: string, agentName: string) {
+  constructor(
+    socketId: string,
+    agentName: string,
+    public socket: Socket
+  ) {
     this.socketId = socketId;
     this.agentName = agentName;
   }

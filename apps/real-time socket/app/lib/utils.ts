@@ -12,6 +12,7 @@ export function handleDisconnection(socketId: string) {
       console.log(
         `Consumer ${consumer.consumerName} removed from village ${village.villageId}`
       );
+      village.updateWaitlist();
       userRemoved = true;
     }
 

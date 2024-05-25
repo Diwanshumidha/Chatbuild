@@ -37,8 +37,9 @@ export class Room {
   }
 
   sendMessage(socket: Socket, message: string) {
-    this.village.io
+    socket
       .to(this.roomId)
+      .except(socket.id)
       .emit("message", { senderId: socket.id, message });
   }
 

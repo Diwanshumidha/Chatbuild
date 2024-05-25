@@ -1,4 +1,4 @@
-import { Server, Socket } from "socket.io";
+import { Namespace, Server, Socket } from "socket.io";
 import { removeEntityFromArray } from "./lib/utils";
 import { Agent, Consumer } from "./participants";
 import { Room } from "./room";
@@ -29,8 +29,8 @@ export class Village {
     this.updateWaitlist();
   }
 
-  joinAgent(socketId: string, name: string) {
-    const agent = new Agent(socketId, name);
+  joinAgent(socket: Socket, name: string) {
+    const agent = new Agent(socket.id, name, socket);
     this.availableAgents.push(agent);
   }
 
@@ -93,9 +93,10 @@ export class Village {
   }
 
   sendMessageToAllAgents(event: string, data: any) {
-    this.io
-      .to(this.availableAgents.map((agent) => agent.socketId))
-      .emit(event, data);
+    console.log(this.availableAgents);
+    this.availableAgents.forEach((agent) => {
+      agent.socket.emit(event, data);
+    });
   }
 
   //-------------------- Deletions ------------------------------
