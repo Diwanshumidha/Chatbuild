@@ -4,6 +4,7 @@ import { Village } from "./village";
 
 type JoinPayload = {
   name: string;
+  email:string;
   villageId: string;
   role: "agent" | "consumer";
 };
@@ -24,7 +25,7 @@ export class SocketHandler {
     io.on("connection", (socket: Socket) => {
       console.log("New client connected");
 
-      socket.on("join", ({ name, role, villageId }: JoinPayload) => {
+      socket.on("join", ({ name, email, role, villageId }: JoinPayload) => {
         if (!role || !villageId) {
           console.log({ role, villageId });
           socket.emit("error", "Missing role or villageId");
@@ -41,11 +42,15 @@ export class SocketHandler {
         }
 
         if (role === "consumer") {
+        
           const consumer = village.getWaitlistUserById(socket.id);
           if (consumer) {
             return socket.emit("error", { message: "Consumer Already Exist" });
           }
-          village.joinConsumer(socket.id, name);
+          if(!email){
+            return socket.emit("error", { message: "Consumer Email is also required" });
+          }
+          village.joinConsumer(socket.id, name, email);
         } else if (role === "agent") {
           village.joinAgent(socket, name);
           socket.emit("consumers:get", { consumers: village.consumerWaitlist });
@@ -64,9 +69,15 @@ export class SocketHandler {
           const consumer = village?.getWaitlistUserById(consumerId);
 
           if (!agent) {
-            socket.emit("error", {
+            return socket.emit("error", {
               message: "No Agent Found",
             });
+          }
+
+          const existingRoom = village?.rooms.find(room => room.agent.socketId === socket.id)
+          if(!!existingRoom){
+            village?.deleteRoom(existingRoom.roomId)
+            village?.joinConsumer(existingRoom.consumer.socketId,existingRoom.consumer.consumerName, existingRoom.consumer.email )
           }
 
           if (village) {
@@ -96,6 +107,19 @@ export class SocketHandler {
           }
         }
       });
+
+      socket.on("endChat", ({villageId, roomId}:{villageId:string,roomId:string})=>{
+        const village = Village.getVillage(villageId);
+        if (village) {
+          console.log(village.villageId);
+          const room = village.rooms.find((room) => room.roomId === roomId);
+          
+          if (room) {
+            console.log(room.roomId);
+            village.deleteRoom(room.roomId)
+          }
+        }
+      })
 
       socket.on("disconnect", () => {
         console.log("Client disconnected");

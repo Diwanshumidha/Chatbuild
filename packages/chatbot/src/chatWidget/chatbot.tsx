@@ -10,6 +10,8 @@ import { useMessages } from "../hooks/use-messages";
 import { useThread } from "../hooks/use-thread";
 import { useSuggestions } from "../hooks/use-suggestion-context";
 import { SiChatbot } from "react-icons/si";
+import { useVillageStore } from "../context/village-context";
+
 
 const Chatbot = ({
   apiKey,
@@ -28,6 +30,7 @@ const Chatbot = ({
   const { setMessages } = useMessages();
   const { resetThread } = useThread();
   const { setSuggestion } = useSuggestions();
+  const {setVillageId} = useVillageStore()
 
   useEffect(() => {
     const fetchBot = async function () {
@@ -39,12 +42,20 @@ const Chatbot = ({
         );
         return;
       }
+
+      
       const data = await response.json();
       if (!data.data) {
         console.error(
           "[CHATBUILD_AI] There Was an Error While Loading The Chatbot"
         );
         return;
+      }
+
+
+      if(data.village){
+        console.log(data.village.id)
+        setVillageId(data.village.id)
       }
       const Details = data.data;
       const textColor = getContrast(themeColor || Details.colorScheme);

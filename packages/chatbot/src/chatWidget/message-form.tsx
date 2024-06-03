@@ -62,7 +62,7 @@ const MessageForm = ({ apiKey, scrollToBottom }: MessageFormProps) => {
   };
 
   return (
-    <div className=" cb-px-4 cb-space-y-3 chatbot-widget__message-form">
+    <div className=" cb-px-4 cb-space-y-3 chatbot-widget__message-form cb-mb-4">
       <div className="chatbot_suggestion_container cb-relative">
         <div className="cb-py-1 cb-flex cb-gap-3 cb-w-full cb-overflow-x-auto chatbot_scrollbar ">
           {suggestion.map((item, index) => (

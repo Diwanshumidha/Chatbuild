@@ -28,6 +28,7 @@ export class Room {
       agentSocket.to(this.consumer.socketId).emit("agent-joined", {
         roomId: this.roomId,
         agentId: this.agent.socketId,
+        agentName:this.agent.agentName
       });
 
       console.log(

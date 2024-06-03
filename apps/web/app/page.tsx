@@ -4,7 +4,7 @@ import Chatbot from "@chatbuild/chatbot";
 const page = () => {
   return (
     <div>
-      <Chatbot rounded={true} apiKey={process.env.API_KEY} />
+      <Chatbot rounded={true} showWatermark apiKey='5634fdb2-faf8-45c1-8427-53de0a91212b' />
     </div>
   );
 };

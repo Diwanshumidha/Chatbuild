@@ -6,6 +6,8 @@ import { isValidUUID } from "../lib/utils";
 import Widget from "./chatbot";
 import { WidgetProps } from "./types";
 import "../../dist/output.css";
+import { AgentContextProvider, VillageContextProvider } from "../context/village-context";
+import { SocketProvider } from "../hooks/use-consumer-socket";
 // import "../../global.css";
 
 /**
@@ -28,6 +30,9 @@ const Chatbot = (props: WidgetProps) => {
 
   return (
     <ErrorBoundary fallback={<></>}>
+      <AgentContextProvider>
+        <VillageContextProvider>
+      <SocketProvider>
       <MessagesContextProvider>
         <AssistantContextProvider>
           <SuggestionContextProvider>
@@ -35,6 +40,9 @@ const Chatbot = (props: WidgetProps) => {
           </SuggestionContextProvider>
         </AssistantContextProvider>
       </MessagesContextProvider>
+      </SocketProvider>
+      </VillageContextProvider>
+      </AgentContextProvider>
     </ErrorBoundary>
   );
 };

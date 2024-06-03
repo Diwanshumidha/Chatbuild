@@ -23,8 +23,8 @@ export class Village {
     console.log(`A New Village Created Village Id:${this.villageId}`);
   }
 
-  joinConsumer(socketId: string, name: string) {
-    const consumer = new Consumer(socketId, name);
+  joinConsumer(socketId: string, name: string, email:string) {
+    const consumer = new Consumer(socketId, name,email);
     this.consumerWaitlist.push(consumer);
     this.updateWaitlist();
   }

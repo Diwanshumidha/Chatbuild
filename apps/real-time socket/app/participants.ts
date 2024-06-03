@@ -24,15 +24,19 @@ export class Agent {
 export class Consumer {
   public socketId: string;
   public consumerName: string;
+  public email:string
+  
 
-  constructor(socketId: string, consumerName: string) {
+  constructor(socketId: string, consumerName: string, email:string) {
     this.socketId = socketId;
     this.consumerName = consumerName;
+    this.email = email
   }
 
   getConsumerDetails() {
     return {
       agentName: this.consumerName,
+      email:this.email,
       socketId: this.socketId,
     };
   }

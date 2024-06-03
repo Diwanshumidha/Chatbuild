@@ -16,21 +16,29 @@ export function handleDisconnection(socketId: string) {
       userRemoved = true;
     }
 
-    if (agent) {
-      village.removeAgent(socketId);
-      console.log(
-        `Agent ${agent.agentName} removed from village ${village.villageId}`
-      );
-      userRemoved = true;
-    }
+
 
     const room = village.rooms.find(
       (room) =>
         room.agent.socketId === socketId || room.consumer.socketId === socketId
     );
+
+    
     if (room) {
       village.deleteRoom(room.roomId);
-      console.log(`Room ${room.roomId} removed due to disconnection`);
+
+      console.log(`Room ${room.roomId} removed due to disconnection of ${socketId}`);
+      userRemoved = true;
+    }
+    
+    if (agent) {
+      village.removeAgent(socketId);
+      if(room){
+        village.joinConsumer(room.consumer.socketId, room.consumer.consumerName, room.consumer.email)
+      }
+      console.log(
+        `Agent ${agent.agentName} removed from village ${village.villageId}`
+      );
       userRemoved = true;
     }
   }
@@ -51,3 +59,4 @@ export function removeEntityFromArray(
     console.log(`${entityType} ${removedEntity.socketId} removed`);
   }
 }
+ 
