@@ -10,21 +10,22 @@ import { ScrollArea } from "../components/ui/scroll-area"
 
 const RealTimeChat = () => {
   const {user, setUser, villageId} = useVillageStore()
-  const {agent,currentRoomId,hasAgentLeft,messages} = useAgentStore()
+  const {currentRoomId, hasAgentLeft} = useAgentStore()
   const {join,sendMessage} = useSocket()
  
   const [name,setName] = useState("")
   const [email,setEmail] = useState("")
+  const [message, setMessage] = useState("")
   const [userMessage,setUserMessage] = useState("")
 
 
 
   const onSubmit = () => {
-    if(!name || !email){
+    if(!name || !email || !message){
         return 
     }
 
-    join(name, email)
+    join(name, email, message)
     setUser({email,name})
   }
 
@@ -70,6 +71,14 @@ const RealTimeChat = () => {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
+          <textarea
+          rows={4}
+            placeholder="Your message..."
+            aria-label="Type here"
+            className="chatbot-widget__username-input cb-h-9 cb-rounded-md cb-border cb-border-input cb-bg-transparent cb-text-chatbot_foreground cb-shadow-sm cb-transition-colors file:cb-border-0 file:cb-bg-transparent file:cb-text-sm file:cb-font-medium placeholder:cb-text-muted-foreground focus-visible:cb-outline-none focus-visible:cb-ring-1 disabled:cb-cursor-not-allowed disabled:cb-opacity-50 cb-w-full cb-flex cb-justify-end cb-items-end focus-visible:cb-ring-transparent focus:cb-ring-0 cb-focus cb-px-4 cb-rounded-r-none cb-text-sm"
+            onChange={(e) => setMessage(e.target.value)}
+            value={message}
+          />
           <Button
             type="submit"
             className="cb-border-s-0 cb-w-full cb-h-9 chatbot-widget__username-submit"
@@ -108,11 +117,13 @@ const RealTimeChat = () => {
           placeholder="Message..."
           aria-label="Type here"
           value={userMessage}
+          disabled={hasAgentLeft}
           onChange={(e) => setUserMessage(e.target.value)}
           className="chatbot-widget__message-form--input cb-flex-1 cb-py-2 focus:cb-outline-none   "
         />
         <button
           type="submit"
+          disabled={hasAgentLeft}
           className="cb-border-s-0 chatbot-widget__message-form--submit cb-bg-transparent cb-text-chatbot_primary disabled:cb-opacity-55 "
          
         >

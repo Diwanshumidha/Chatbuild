@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, createContext, useContext, useState } from "r
 type TUser = {
     name: string;
     email: string;
+
 }
 
 type TVillageContext = {

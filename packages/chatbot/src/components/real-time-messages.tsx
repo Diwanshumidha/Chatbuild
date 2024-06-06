@@ -1,14 +1,17 @@
 import { useEffect, useRef } from "react";
 import { TAgent, useAgentStore } from "../context/village-context";
 import { cn } from "../lib/utils";
-import { ScrollArea } from "./ui/scroll-area";
+
 
 const RealTimeMessages = () => {
-  const { messages, agent } = useAgentStore();
+  const { messages, agent, hasAgentLeft } = useAgentStore();
   
 
   return (
     <div className="cb-flex-1">
+      {hasAgentLeft && (
+        <p className="cb-text-red-500 cb-bg-red-200 cb-p-2 cb-rounded-lg">Agent has left the chat</p>
+      )}
       {messages.map((message, index) => (
         <Message message={message} agent={agent} key={`Message-${index}`} />
       ))}

@@ -11,30 +11,28 @@ import { Button } from "../components/ui/button";
 import MessageForm from "./message-form";
 import { useSuggestions } from "../hooks/use-suggestion-context";
 import { PiArrowsCounterClockwiseBold } from "react-icons/pi";
-import { useVillageStore } from "../context/village-context";
 import RealTimeChat from "./real-time-chat";
 import { BsChatRightText, BsQuestionCircleFill } from "react-icons/bs";
 import { GoQuestion } from "react-icons/go";
 import { BsChatRightTextFill } from "react-icons/bs";
+import { useVillageStore } from "../context/village-context";
 
 type WidgetProps = {
   chatbotDetails: TChatBoxDetails;
   handleChatBoxClose: () => void;
   resetChat: () => void;
-  showWatermark: boolean;
 };
 const Widget = ({
   chatbotDetails,
   handleChatBoxClose,
   resetChat,
-  showWatermark,
 }: WidgetProps) => {
   const { setMessages, messages, generationLoading } = useMessages();
   const { fetchThread, threadError, threadId, threadLoading } = useThread();
   const { setSuggestion } = useSuggestions();
   const [userNameInput, setUserNameInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null); // Ref for the element to scroll to
-  const [currentTab, setCurrentTab] = useState(1);
+  const [currentTab, setCurrentTab] = useState(0);
   const { villageId } = useVillageStore();
 
   const handleUserNameFormSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -166,30 +164,34 @@ const Widget = ({
 
       {currentTab === 1 ? <RealTimeChat /> : null}
       {/* Tab Buttons for Lice Chat and AI chat */}
-      <div className="cb-w-full cb-flex cb-p-3 cb-shadow-md  cb-border-t">
-        <button
-          onClick={() => setCurrentTab(0)}
-          className="cb-flex-1 cb-flex cb-gap-1 cb-flex-col cb-items-center cb-text-sm"
-        >
-          {currentTab === 0 ? (
-            <BsQuestionCircleFill size={17} />
-          ) : (
-            <GoQuestion size={17} />
-          )}
-          Ask AI
-        </button>
-        <button
-          onClick={() => setCurrentTab(1)}
-          className="cb-flex-1 cb-flex cb-gap-1 cb-flex-col cb-items-center"
-        >
-          {currentTab === 1 ? (
-            <BsChatRightTextFill size={17} />
-          ) : (
-            <BsChatRightText size={17} />
-          )}
-          Live Chat
-        </button>
-      </div>
+      {villageId ? (
+        <div className="cb-w-full cb-flex cb-p-3 cb-shadow-md  cb-border-t">
+          <button
+            onClick={() => setCurrentTab(0)}
+            className="cb-flex-1 cb-flex cb-gap-1 cb-flex-col cb-items-center cb-text-sm"
+          >
+            {currentTab === 0 ? (
+              <BsQuestionCircleFill size={17} />
+            ) : (
+              <GoQuestion size={17} />
+            )}
+            Ask AI
+          </button>
+          <button
+            onClick={() => setCurrentTab(1)}
+            className="cb-flex-1 cb-flex cb-gap-1 cb-flex-col cb-items-center"
+          >
+            {currentTab === 1 ? (
+              <BsChatRightTextFill size={17} />
+            ) : (
+              <BsChatRightText size={17} />
+            )}
+            Live Chat
+          </button>
+        </div>
+      ) : (
+        null
+      )}
       {/* {showWatermark && (
         <div className="watermark cb-text-xs cb-text-center cb-my-1">
           <p>

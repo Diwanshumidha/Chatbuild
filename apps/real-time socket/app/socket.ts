@@ -1,11 +1,13 @@
 import { Server, Socket } from "socket.io";
-import { handleDisconnection } from "./lib/utils";
+import { handleDisconnection, sendEmailonConsumerJoin, verifyAccessKey } from "./lib/utils";
 import { Village } from "./village";
 
 type JoinPayload = {
   name: string;
   email:string;
   villageId: string;
+  message: string;
+  accessKey: string;
   role: "agent" | "consumer";
 };
 
@@ -25,7 +27,7 @@ export class SocketHandler {
     io.on("connection", (socket: Socket) => {
       console.log("New client connected");
 
-      socket.on("join", ({ name, email, role, villageId }: JoinPayload) => {
+      socket.on("join", async ({ name, email, role, villageId, message, accessKey }: JoinPayload) => {
         if (!role || !villageId) {
           console.log({ role, villageId });
           socket.emit("error", "Missing role or villageId");
@@ -42,16 +44,20 @@ export class SocketHandler {
         }
 
         if (role === "consumer") {
-        
           const consumer = village.getWaitlistUserById(socket.id);
           if (consumer) {
             return socket.emit("error", { message: "Consumer Already Exist" });
           }
-          if(!email){
-            return socket.emit("error", { message: "Consumer Email is also required" });
+          if(!email || !message){
+            return socket.emit("error", { message: "Consumer Email and Message are required" });
           }
-          village.joinConsumer(socket.id, name, email);
+          village.joinConsumer(socket.id, name, email, message);
+          sendEmailonConsumerJoin({name,email,message,villageId:village.villageId})
+
         } else if (role === "agent") {
+          if(!accessKey) return socket.emit("error", { message: "Access Key is required" });
+          const isValid = await verifyAccessKey(accessKey);
+          if(!isValid) return socket.emit("error", { message: "Invalid Access Key" });
           village.joinAgent(socket, name);
           socket.emit("consumers:get", { consumers: village.consumerWaitlist });
         }
@@ -77,7 +83,7 @@ export class SocketHandler {
           const existingRoom = village?.rooms.find(room => room.agent.socketId === socket.id)
           if(!!existingRoom){
             village?.deleteRoom(existingRoom.roomId)
-            village?.joinConsumer(existingRoom.consumer.socketId,existingRoom.consumer.consumerName, existingRoom.consumer.email )
+            village?.joinConsumer(existingRoom.consumer.socketId,existingRoom.consumer.consumerName, existingRoom.consumer.email, existingRoom.consumer.message )
           }
 
           if (village) {

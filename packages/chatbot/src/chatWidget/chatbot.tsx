@@ -20,7 +20,6 @@ const Chatbot = ({
   rounded,
   textColor,
   themeColor,
-  showWatermark = false,
 }: WidgetProps) => {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isWelcomeBoxOpen, setIsWelcomeBoxOpen] = useState(true);
@@ -123,7 +122,6 @@ const Chatbot = ({
           resetChat={resetChat}
           chatbotDetails={chatbotDetails}
           handleChatBoxClose={handleChatBoxClose}
-          showWatermark={showWatermark}
         />
       ) : null}
     </div>

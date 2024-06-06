@@ -1,12 +1,13 @@
 import { Socket, io } from "socket.io-client";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { useAgentStore, useVillageStore } from "../context/village-context";
+import { SOCKET_SERVER_PATH } from "../lib/constants";
 
 
 interface SocketContextProps {
   socket: Socket | null;
   sendMessage: (message: string, roomId: string) => void;
-  join:(username:string, email:string) => void
+  join:(username:string, email:string, message: string) => void
   reset:()=>void
 }
 
@@ -27,7 +28,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if(!villageId) return
-    const newSocket = io("http://localhost:8080");
+    const newSocket = io(SOCKET_SERVER_PATH);
 
     newSocket.on("connect", () => {
       console.log("Connected");
@@ -71,10 +72,11 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     socket?.emit("message", { message, roomId, villageId });
   };
 
-  const join = (userName:string,email:string) => {
+  const join = (userName:string,email:string, message:string) => {
      socket?.emit("join", {
         villageId: villageId,
         email,
+        message,
         name: userName,
         role: "consumer",
         
