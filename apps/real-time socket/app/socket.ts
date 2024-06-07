@@ -65,6 +65,13 @@ export class SocketHandler {
         socket.emit("joinedVillage", { villageId, name, role });
       });
 
+      socket.on('getConsumers', ({villageId}:{villageId:string})=>{
+        const village = Village.getVillage(villageId);
+        if(village){
+          socket.emit("consumers:get", { consumers: village.consumerWaitlist });
+        }
+      })
+
       socket.on(
         "createRoom",
         ({ villageId, consumerId }: CreateRoomPayload, cb) => {

@@ -75,7 +75,7 @@ const RealTimeChat = () => {
           rows={4}
             placeholder="Your message..."
             aria-label="Type here"
-            className="chatbot-widget__username-input cb-h-9 cb-rounded-md cb-border cb-border-input cb-bg-transparent cb-text-chatbot_foreground cb-shadow-sm cb-transition-colors file:cb-border-0 file:cb-bg-transparent file:cb-text-sm file:cb-font-medium placeholder:cb-text-muted-foreground focus-visible:cb-outline-none focus-visible:cb-ring-1 disabled:cb-cursor-not-allowed disabled:cb-opacity-50 cb-w-full cb-flex cb-justify-end cb-items-end focus-visible:cb-ring-transparent focus:cb-ring-0 cb-focus cb-px-4 cb-rounded-r-none cb-text-sm"
+            className="chatbot-widget__username-input cb-rounded-md cb-border cb-border-input cb-bg-transparent cb-text-chatbot_foreground cb-shadow-sm cb-transition-colors file:cb-border-0 file:cb-bg-transparent file:cb-text-sm file:cb-font-medium placeholder:cb-text-muted-foreground focus-visible:cb-outline-none focus-visible:cb-ring-1 disabled:cb-cursor-not-allowed disabled:cb-opacity-50 cb-w-full cb-flex cb-justify-end cb-items-end focus-visible:cb-ring-transparent focus:cb-ring-0 cb-focus cb-px-4 cb-rounded-r-none cb-text-sm"
             onChange={(e) => setMessage(e.target.value)}
             value={message}
           />
