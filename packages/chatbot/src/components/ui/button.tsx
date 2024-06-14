@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "cb-bg-chatbot_primary cb-text-chatbot_primary-foreground ",
+        default: "!cb-bg-chatbot_primary cb-text-chatbot_primary-foreground ",
         destructive:
           "cb-bg-chatbot_destructive cb-text-chatbot_destructive-foreground hover:cb-bg-chatbot_destructive/90",
         outline:

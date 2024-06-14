@@ -75,7 +75,6 @@ export async function verifyAccessKey(accessKey: string) {
       },
       body: JSON.stringify({ accessKey: accessKey }),
     });
-
     if (response.ok) {
       const data = await response.json();
       console.log(data);
