@@ -61,9 +61,10 @@ const Widget = ({
   }, [messages, generationLoading]);
 
   return (
-    <div className="chatbot-widget__body cb-bg-chatbot_background cb-text-chatbot_foreground   sm:cb-mb-4 cb-break-words cb-flex cb-flex-col  cb-justify-between cb-shadow-lg cb-right-0 cb-rounded-2xl cb-fixed  sm:cb-absolute sm:cb-bottom-full cb-bottom-0    cb-w-screen cb-h-screen sm:cb-w-96 sm:cb-h-[min(80dvh,550px)]">
+    <div className="chatbot-widget__body cb-bg-chatbot_background cb-text-chatbot_foreground sm:cb-mb-4 cb-break-words cb-flex cb-flex-col cb-justify-between cb-shadow-lg cb-right-0 cb-rounded-2xl cb-fixed sm:cb-absolute sm:cb-bottom-full cb-bottom-0 cb-w-screen cb-h-[100dvh] sm:cb-w-96 sm:cb-h-[min(80dvh,550px)]">
+
       {/* Header Of The Chatbot Widget */}
-      <div className="chatbot-widget__header cb-justify-between cb-p-3 cb-flex cb-items-center cb-bg-chatbot_primary cb-text-chatbot_primary-foreground sm:cb-rounded-t-2xl cb-rounded-b-none ">
+      <div className="chatbot-widget__header cb-justify-between cb-p-3 cb-flex cb-items-center cb-bg-chatbot_primary cb-text-chatbot_primary-foreground sm:cb-rounded-t-2xl cb-rounded-b-none">
         <div className="cb-flex cb-gap-3 cb-items-center">
           <LuDot className="cb-text-green-500" size={40} />
           <h2 className="chatbot-widget__header-heading cb-text-lg cb-font-bold cb-text-center cb-text-chatbot_primary-foreground">

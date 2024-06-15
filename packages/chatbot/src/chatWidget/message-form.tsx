@@ -95,7 +95,7 @@ const MessageForm = ({ apiKey, scrollToBottom }: MessageFormProps) => {
           value={userMessage}
           disabled={!threadId || generationLoading || threadLoading}
           onChange={(e) => setUserMessage(e.target.value)}
-          className="chatbot-widget__message-form--input cb-flex-1 cb-py-2 focus:cb-outline-none   "
+          className="chatbot-widget__message-form--input cb-flex-1 cb-py-2 focus:cb-outline-none !cb-bg-transparent"
         />
         <button
           type="submit"

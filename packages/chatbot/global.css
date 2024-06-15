@@ -91,3 +91,8 @@
 .chatbot_scrollbar::-webkit-scrollbar-thumb:active {
   background-color: var(--chatbot-theme-color);
 }
+
+
+.chatbot-widget input:active {
+  font-size: 16px !important;
+}
