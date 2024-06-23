@@ -121,6 +121,17 @@ export class SocketHandler {
         }
       });
 
+      socket.on("typing", ({villageId, roomId, isTyping})=> {
+        const village = Village.getVillage(villageId);
+        if (village) {
+          const room = village.rooms.find((room) => room.roomId === roomId);
+          
+          if (room) {
+            room.sendTypingState( socket, isTyping );
+          }
+        }
+      })
+
       socket.on("endChat", ({villageId, roomId}:{villageId:string,roomId:string})=>{
         const village = Village.getVillage(villageId);
         if (village) {

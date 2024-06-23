@@ -86,6 +86,7 @@ const Chatbot = ({
     resetThread();
     setSuggestion([]);
     setIsChatbotOpen(false);
+    
   };
 
   const Icon = icon ? icon : SiChatbot;

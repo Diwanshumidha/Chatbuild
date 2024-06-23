@@ -14,8 +14,9 @@ interface SocketContextProps {
 const SocketContext = createContext<SocketContextProps | undefined>(undefined);
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
-  const { addMessage,setAgentLeft,setRoom, resetMessages  } = useAgentStore();
+  const { addMessage,setAgentLeft,setRoom, resetMessages, setIsAgentTyping  } = useAgentStore();
   const [socket, setSocket] = useState<Socket | null>(null);
+
   const {villageId} = useVillageStore()
 
   
@@ -48,6 +49,12 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       setRoom(roomId,agent)
     });
 
+    newSocket.on("typing", (payload) => {
+      if(payload.isTyping !== undefined){
+        setIsAgentTyping(payload.isTyping)
+      }
+    
+    })
    
     newSocket.on("message", (payload) => {
       console.log("PAYLOAD", payload);

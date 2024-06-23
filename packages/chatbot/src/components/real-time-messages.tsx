@@ -9,12 +9,13 @@ const RealTimeMessages = () => {
 
   return (
     <div className="cb-flex-1">
-      {hasAgentLeft && (
-        <p className="cb-text-red-500 cb-bg-red-200 cb-p-2 cb-rounded-lg">Agent has left the chat</p>
-      )}
+     
       {messages.map((message, index) => (
         <Message message={message} agent={agent} key={`Message-${index}`} />
-      ))}
+      ))} 
+      {hasAgentLeft && (
+        <p className="cb-text-red-500 cb-bg-red-200 cb-p-2 cb-text-center cb-rounded-lg">Agent has left the chat</p>
+      )}
     </div>
   );
 };

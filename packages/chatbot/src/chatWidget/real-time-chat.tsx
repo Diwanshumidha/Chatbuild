@@ -1,22 +1,23 @@
 import { useState } from "react"
 import { useAgentStore, useVillageStore } from "../context/village-context"
 import { useSocket } from "../hooks/use-consumer-socket"
-import { Button } from "../components/ui/button"
-import WaitingIllustration from "../components/waiting-svg"
 import { Icons } from "../components/ui/Icons"
 import RealTimeMessages from "../components/real-time-messages"
 import { ScrollArea } from "../components/ui/scroll-area"
+import WaitingForChat from "../components/waiting-for-chat"
+import { Button } from "../components/ui/button"
 
 
 const RealTimeChat = () => {
   const {user, setUser, villageId} = useVillageStore()
-  const {currentRoomId, hasAgentLeft} = useAgentStore()
+  const {currentRoomId, hasAgentLeft, isAgentTyping} = useAgentStore()
   const {join,sendMessage} = useSocket()
  
   const [name,setName] = useState("")
   const [email,setEmail] = useState("")
   const [message, setMessage] = useState("")
   const [userMessage,setUserMessage] = useState("")
+
 
 
 
@@ -75,7 +76,7 @@ const RealTimeChat = () => {
           rows={4}
             placeholder="Your message..."
             aria-label="Type here"
-            className="chatbot-widget__username-input cb-rounded-md cb-border cb-border-input cb-bg-transparent cb-text-chatbot_foreground cb-shadow-sm cb-transition-colors file:cb-border-0 file:cb-bg-transparent file:cb-text-sm file:cb-font-medium placeholder:cb-text-muted-foreground focus-visible:cb-outline-none focus-visible:cb-ring-1 disabled:cb-cursor-not-allowed disabled:cb-opacity-50 cb-w-full cb-flex cb-justify-end cb-items-end focus-visible:cb-ring-transparent focus:cb-ring-0 cb-focus cb-px-4 cb-rounded-r-none cb-text-sm"
+            className="chatbot-widget__username-input cb-py-2 cb-rounded-md cb-border cb-border-input cb-bg-transparent cb-text-chatbot_foreground cb-shadow-sm cb-transition-colors file:cb-border-0 file:cb-bg-transparent file:cb-text-sm file:cb-font-medium placeholder:cb-text-muted-foreground focus-visible:cb-outline-none focus-visible:cb-ring-1 disabled:cb-cursor-not-allowed disabled:cb-opacity-50 cb-w-full cb-flex cb-justify-end cb-items-end focus-visible:cb-ring-transparent focus:cb-ring-0 cb-focus cb-px-4 cb-rounded-r-none cb-text-sm"
             onChange={(e) => setMessage(e.target.value)}
             value={message}
           />
@@ -96,22 +97,29 @@ const RealTimeChat = () => {
 
   if(!currentRoomId){
     return (
-        <div className="cb-bg-white cb-flex cb-flex-col cb-justify-center cb-items-center cb-gap-5"> 
-             <WaitingIllustration/>
-            An Agent Will Join You Shortly
-        </div>
+        <WaitingForChat/>
     ) 
   }
 
   return (
      <>
+     
     <ScrollArea className="cb-px-4 cb-space-y-3 cb-h-full cb-flex cb-flex-col chatbot-widget__message-form cb-mb-4" >
       <RealTimeMessages/>
       </ScrollArea>
+      {isAgentTyping && <div className="cb-flex cb-items-center cb-text-left cb-w-full cb-gap-2 cb-p-2">
+        <p className="cb-text-chatbot_foreground cb-text-xs">Agent typing</p>
+        <div className="cb-loader" >
+          <div className="cb-loader__dot"></div>
+          <div className="cb-loader__dot"></div>
+          <div className="cb-loader__dot"></div>
+        </div>
+        </div>}
       <form
         onSubmit={sendMessageForm}
         className="cb-flex cb-flex-row cb-items-center cb-h-11 cb-text-chatbot_foreground focus-within:cb-ring-1 focus-within:cb-ring-chatbot_primary cb-rounded-md cb-border cb-border-input cb-bg-transparent cb-shadow-sm cb-transition-colors file:cb-border-0 file:cb-bg-transparent file:cb-text-sm file:cb-font-medium placeholder:cb-text-muted-foreground focus-visible:cb-outline-none focus-visible:cb-ring-1 cb- disabled:cb-cursor-not-allowed disabled:cb-opacity-50 cb-w-full cb-justify-end focus-visible:cb-ring-transparent focus:cb-ring-0 cb-focus cb-px-4 cb-text-sm"
       >
+        
         <input
           type={"text"}
           placeholder="Message..."

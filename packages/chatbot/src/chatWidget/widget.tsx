@@ -15,7 +15,7 @@ import RealTimeChat from "./real-time-chat";
 import { BsChatRightText, BsQuestionCircleFill } from "react-icons/bs";
 import { GoQuestion } from "react-icons/go";
 import { BsChatRightTextFill } from "react-icons/bs";
-import { useVillageStore } from "../context/village-context";
+import { useAgentStore, useVillageStore } from "../context/village-context";
 
 type WidgetProps = {
   chatbotDetails: TChatBoxDetails;
@@ -34,6 +34,7 @@ const Widget = ({
   const messagesEndRef = useRef<HTMLDivElement | null>(null); // Ref for the element to scroll to
   const [currentTab, setCurrentTab] = useState(0);
   const { villageId } = useVillageStore();
+  const { agent } = useAgentStore();
 
   const handleUserNameFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,7 +69,7 @@ const Widget = ({
         <div className="cb-flex cb-gap-3 cb-items-center">
           <LuDot className="cb-text-green-500" size={40} />
           <h2 className="chatbot-widget__header-heading cb-text-lg cb-font-bold cb-text-center cb-text-chatbot_primary-foreground">
-            {chatbotDetails.chatBotName || "Chatty Assistant"}
+            {currentTab === 1 && agent?.agentName ? `${agent.agentName} - Agent`: chatbotDetails.chatBotName || "Chatty Assistant"}
           </h2>
         </div>
         <div className="cb-flex cb-space-x-3 cb-items-center">
@@ -103,6 +104,8 @@ const Widget = ({
                   src={
                     chatbotDetails?.logoUrl || "https://via.placeholder.com/50"
                   }
+                  loading="eager"
+                  rel="preload"
                   alt="logo"
                   width={80}
                   height={80}

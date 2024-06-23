@@ -44,6 +44,10 @@ export class Room {
       .emit("message", { senderId: socket.id, message });
   }
 
+  sendTypingState(socket:Socket, isTyping:boolean){
+    socket.to(this.roomId).except(socket.id).emit("typing" , {isTyping})
+  }
+
   notifyDisconnection() {
     this.village.io
       .to(this.roomId)
