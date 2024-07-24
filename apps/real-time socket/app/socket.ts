@@ -34,7 +34,7 @@ export class SocketHandler {
           return;
         }
 
-        console.log({ name, villageId });
+        console.log({ name, villageId, accessKey });
 
         let village = Village.getVillage(villageId);
         if (!village) {
