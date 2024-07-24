@@ -56,7 +56,7 @@ export class SocketHandler {
 
         } else if (role === "agent") {
           if(!accessKey) return socket.emit("error", { message: "Access Key is required" });
-          const isValid = await verifyAccessKey(accessKey);
+          const isValid = await verifyAccessKey(accessKey, villageId);
           if(!isValid) return socket.emit("error", { message: "Invalid Access Key" });
           village.joinAgent(socket, name);
           socket.emit("consumers:get", { consumers: village.consumerWaitlist });

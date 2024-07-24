@@ -65,7 +65,7 @@ export function removeEntityFromArray(
   }
 }
 
-export async function verifyAccessKey(accessKey: string) {
+export async function verifyAccessKey(accessKey: string, villageId: string) {
   try {
     let isValid = false;
     const response = await fetch(`${process.env.BASE_SERVER_PATH}/village/verify`, {
@@ -73,7 +73,7 @@ export async function verifyAccessKey(accessKey: string) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ accessKey: accessKey }),
+      body: JSON.stringify({ accessKey: accessKey, villageId: villageId }),
     });
     if (response.ok) {
       const data = await response.json();
