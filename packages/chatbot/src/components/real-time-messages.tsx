@@ -1,20 +1,20 @@
 import { useEffect, useRef } from "react";
 import { TAgent, useAgentStore } from "../context/village-context";
 import { cn } from "../lib/utils";
-
+import { motion } from "framer-motion";
 
 const RealTimeMessages = () => {
   const { messages, agent, hasAgentLeft } = useAgentStore();
-  
 
   return (
-    <div className="cb-flex-1">
-     
+    <div className="real-time-messages">
       {messages.map((message, index) => (
         <Message message={message} agent={agent} key={`Message-${index}`} />
-      ))} 
+      ))}
       {hasAgentLeft && (
-        <p className="cb-text-red-500 cb-bg-red-200 cb-p-2 cb-text-center cb-rounded-lg">Agent has left the chat</p>
+        <p className="real-time-messages__agent-left">
+          Agent has left the chat
+        </p>
       )}
     </div>
   );
@@ -28,23 +28,35 @@ type TMessage = {
   by: "agent" | "consumer";
 };
 
-const Message = ({ message, agent }: { message: TMessage, agent: TAgent | null }) => {
-    const messagesEndRef = useRef<HTMLDivElement | null>(null);
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      };
+const Message = ({
+  message,
+  agent,
+}: {
+  message: TMessage;
+  agent: TAgent | null;
+}) => {
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
-      useEffect(() => {
-        scrollToBottom();
-      }, [message]);
-      
+  useEffect(() => {
+    scrollToBottom();
+  }, [message]);
+
   return (
-    <div
-      className={cn(
-        "cb-flex cb-flex-1 cb-px-1 cb-gap-2",
+    <motion.div
+      animate={{ x: 0, opacity: 1 }}
+      initial={
         message.by === "consumer"
-          ? "cb-justify-end cb-w-full chatbot-widget__user-message"
-          : "cb-justify-start cb-w-full chatbot-widget__chatbot-message"
+          ? { x: 30, opacity: 0 }
+          : { x: -30, opacity: 0 }
+      }
+      className={cn(
+        "real-time-message",
+        message.by === "consumer"
+          ? "real-time-message__consumer-wrapper"
+          : "real-time-message__agent-wrapper"
       )}
     >
       {message?.by === "agent" ? (
@@ -54,31 +66,38 @@ const Message = ({ message, agent }: { message: TMessage, agent: TAgent | null }
           width={12}
           height={12}
           loading="lazy"
-          className="cb-size-4 cb-rounded-full cb-object-contain cb-mt-3"
+          className="real-time-message__agent-logo"
         />
       ) : null}
       <div
         className={cn(
-          "cb-flex cb-gap-y-1 ",
+          "real-time-message__message-container",
           message.by === "consumer"
-            ? "cb-justify-end cb-p-1.5 cb-rounded-3xl cb-gap-2 cb-w-3/4"
-            : "cb-justify-start cb-w-3/4"
+            ? "real-time-message__message-container--consumer"
+            : "real-time-message__message-container--agent"
         )}
       >
-        <div
-          className={cn(
-            message.by === "consumer"
-              ? "cb-w-fit cb-px-3 cb-py-2 cb-rounded-lg cb-bg-chatbot_primary cb-text-chatbot_primary-foreground cb-shadow-md cb-text-end cb-mb-2"
-              : message.by === "agent"
-                ? "cb-w-fit cb-px-3 cb-bg-chatbot_message cb-shadow-md cb-py-2 cb-text-start cb-text-chatbot_message-foreground cb-rounded-lg cb-mb-2"
-                : "cb-w-fit cb-px-3 cb-bg-slate-50 cb-shadow-md cb-py-2 cb-text-start cb-text-red-600 cb-rounded-lg cb-mb-2"
-          )}
-        >
-          {message.message}
+        <div>
+          <div
+            className={cn(
+              message.by === "consumer"
+                ? "real-time-message__message-container--consumer__text cb-shadow-md"
+                : message.by === "agent"
+                  ? "real-time-message__message-container--agent__text cb-shadow-md "
+                  : "real-time-message__message-container__error cb-shadow-md"
+            )}
+          >
+            {message.message}
+          </div>
+          <p className="real-time-message__message-container__timestamp">
+            {new Date(message.time).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
         </div>
-   
       </div>
-      <div className="py-4" ref={messagesEndRef}></div>
-    </div>
+      <div className="real-time-message__ref" ref={messagesEndRef}></div>
+    </motion.div>
   );
 };

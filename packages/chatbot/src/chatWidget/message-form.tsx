@@ -62,9 +62,9 @@ const MessageForm = ({ apiKey, scrollToBottom }: MessageFormProps) => {
   };
 
   return (
-    <div className=" cb-px-4 cb-space-y-3 chatbot-widget__message-form cb-mb-4">
-      <div className="chatbot_suggestion_container cb-relative">
-        <div className="cb-py-1 cb-flex cb-gap-3 cb-w-full cb-overflow-x-auto chatbot_scrollbar ">
+    <div className="cb-space-y-3 chatbot-message-form">
+      <div className="chatbot-message-form__suggestion-container chatbot_suggestion_container">
+        <div className="chatbot-message-form__suggestion-container__layout chatbot_scrollbar">
           {suggestion.map((item, index) => (
             <SuggestionButton
               key={index}
@@ -84,10 +84,7 @@ const MessageForm = ({ apiKey, scrollToBottom }: MessageFormProps) => {
         </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="cb-flex cb-flex-row cb-items-center cb-h-11 cb-text-chatbot_foreground focus-within:cb-ring-1 focus-within:cb-ring-chatbot_primary cb-rounded-md cb-border cb-border-input cb-bg-transparent cb-shadow-sm cb-transition-colors file:cb-border-0 file:cb-bg-transparent file:cb-text-sm file:cb-font-medium placeholder:cb-text-muted-foreground focus-visible:cb-outline-none focus-visible:cb-ring-1 cb- disabled:cb-cursor-not-allowed disabled:cb-opacity-50 cb-w-full cb-justify-end focus-visible:cb-ring-transparent focus:cb-ring-0 cb-focus cb-px-4 cb-text-sm"
-      >
+      <form onSubmit={handleSubmit} className="chatbot-input chatbot-message-form__form">
         <input
           type={"text"}
           placeholder="Message..."
@@ -95,11 +92,11 @@ const MessageForm = ({ apiKey, scrollToBottom }: MessageFormProps) => {
           value={userMessage}
           disabled={!threadId || generationLoading || threadLoading}
           onChange={(e) => setUserMessage(e.target.value)}
-          className="chatbot-widget__message-form--input cb-flex-1 cb-py-2 focus:cb-outline-none !cb-bg-transparent"
+          className="chatbot-message-form__form__input"
         />
         <button
           type="submit"
-          className="cb-border-s-0 chatbot-widget__message-form--submit cb-bg-transparent cb-text-chatbot_primary disabled:cb-opacity-55 "
+          className="chatbot-message-form__form__submit-button"
           disabled={
             !threadId || generationLoading || userMessage.trim().length <= 0
           }
@@ -125,7 +122,7 @@ const SuggestionButton = ({
   return (
     <button
       disabled={disabled}
-      className=" cb-text-nowrap cb-bg-chatbot_primary disabled:cb-opacity-65 cb-text-chatbot_primary-foreground hover:cb-opacity-90 cb-px-2 cb-py-1 cb-rounded-md"
+      className="chatbot-message-form__suggestion-container__layout__suggestion"
       onClick={onClick}
     >
       {text}

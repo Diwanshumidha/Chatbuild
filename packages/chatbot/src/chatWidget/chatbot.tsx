@@ -29,7 +29,7 @@ const Chatbot = ({
   const { setMessages } = useMessages();
   const { resetThread } = useThread();
   const { setSuggestion } = useSuggestions();
-  const {setVillageId} = useVillageStore()
+  const { setVillageId } = useVillageStore();
 
   useEffect(() => {
     const fetchBot = async function () {
@@ -42,7 +42,6 @@ const Chatbot = ({
         return;
       }
 
-      
       const data = await response.json();
       if (!data.data) {
         console.error(
@@ -51,10 +50,9 @@ const Chatbot = ({
         return;
       }
 
-
-      if(data.village){
-        console.log(data.village.id)
-        setVillageId(data.village.id)
+      if (data.village) {
+        console.log(data.village.id);
+        setVillageId(data.village.id);
       }
       const Details = data.data;
       const textColor = getContrast(themeColor || Details.colorScheme);
@@ -86,16 +84,12 @@ const Chatbot = ({
     resetThread();
     setSuggestion([]);
     setIsChatbotOpen(false);
-    
   };
 
   const Icon = icon ? icon : SiChatbot;
 
   return (
-    <div
-      className="cb-fixed cb-bottom-5 cb-right-5 cb-p-3 cb-z-[150] cb-text-chatbot_foreground chatbot-widget "
-      style={widgetStyles as React.CSSProperties}
-    >
+    <div className="chatbot-widget cb-transition-all" style={widgetStyles as React.CSSProperties}>
       {isWelcomeBoxOpen && !isChatbotOpen && showWelcomeBox ? (
         <WelcomeBox
           setIsChatbotOpen={setIsChatbotOpen}
@@ -108,14 +102,14 @@ const Chatbot = ({
       <Button
         onClick={() => setIsChatbotOpen(!isChatbotOpen)}
         className={cn(
-          "chatbot-widget__button cb-group active:cb-scale-75 cb-transition-all cb-duration-300 hover:cb-scale-105 cb-w-20 cb-h-14 cb-p-0 cb-justify-center cb-bg-chatbot_primary hover:cb-opacity-80 cb-text-chatbot_primary-foreground cb-flex cb-items-center cb-rounded-full",
-          rounded && "cb-aspect-square cb-w-14 cb-h-14"
+          "chatbot-widget__button cb-transition-all",
+          rounded && "chatbot-widget__button--rounded"
         )}
       >
         {isChatbotOpen ? (
-          <IoClose className="cb-size-[50%]  cb-text-chatbot_primary-foreground cb-cursor-pointer chatbot-widget__icon chatbot-widget__icon--close" />
+          <IoClose className="chatbot-widget__icon chatbot-widget__icon--close" />
         ) : (
-          <Icon className="cb-size-[50%]  cb-text-chatbot_primary-foreground cb-cursor-pointer chatbot-widget__icon chatbot-widget__icon--open" />
+          <Icon className="chatbot-widget__icon chatbot-widget__icon--open" />
         )}
       </Button>
       {isChatbotOpen ? (

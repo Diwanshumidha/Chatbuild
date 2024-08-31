@@ -12,11 +12,11 @@ const WaitingForChat = () => {
     };
   }, []);
   return (
-    <div className="cb-bg-white cb-flex cb-flex-col cb-justify-center cb-items-center cb-gap-5">
+    <div className="wait-room">
       {isTimedOut && ( 
         <>
          <AgentNotThere />
-        <p className="cb-p-2 cb-text-center">
+        <p>
           No agents available at the moment. We will email you shortly.
         </p>
         </>
@@ -25,7 +25,7 @@ const WaitingForChat = () => {
         <>
           <WaitingIllustration />
           An Agent Will Join You Shortly
-        </>
+         </>
       )}
     </div>
   );

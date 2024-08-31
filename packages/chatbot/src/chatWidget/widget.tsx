@@ -1,21 +1,23 @@
-import { LuArrowUpRight, LuDot, LuLoader } from "react-icons/lu";
+import { LuArrowRight, LuLoader } from "react-icons/lu";
 import { TChatBoxDetails } from "./types";
 
 import { IoClose } from "react-icons/io5";
 import { useMessages } from "../hooks/use-messages";
 import { useThread } from "../hooks/use-thread";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { ScrollArea } from "../components/ui/scroll-area";
 import Messages from "./messages";
-import { Button } from "../components/ui/button";
 import MessageForm from "./message-form";
 import { useSuggestions } from "../hooks/use-suggestion-context";
 import { PiArrowsCounterClockwiseBold } from "react-icons/pi";
 import RealTimeChat from "./real-time-chat";
-import { BsChatRightText, BsQuestionCircleFill } from "react-icons/bs";
+import {
+  BsChatRightText,
+  BsQuestionCircleFill,
+} from "react-icons/bs";
 import { GoQuestion } from "react-icons/go";
 import { BsChatRightTextFill } from "react-icons/bs";
-import { useAgentStore, useVillageStore } from "../context/village-context";
+import { useVillageStore } from "../context/village-context";
+import { cn } from "../lib/utils";
 
 type WidgetProps = {
   chatbotDetails: TChatBoxDetails;
@@ -34,7 +36,6 @@ const Widget = ({
   const messagesEndRef = useRef<HTMLDivElement | null>(null); // Ref for the element to scroll to
   const [currentTab, setCurrentTab] = useState(0);
   const { villageId } = useVillageStore();
-  const { agent } = useAgentStore();
 
   const handleUserNameFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,44 +63,55 @@ const Widget = ({
   }, [messages, generationLoading]);
 
   return (
-    <div className="chatbot-widget__body cb-bg-chatbot_background cb-text-chatbot_foreground sm:cb-mb-4 cb-break-words cb-flex cb-flex-col cb-justify-between cb-shadow-lg cb-right-0 cb-rounded-2xl cb-fixed sm:cb-absolute sm:cb-bottom-full cb-bottom-0 cb-w-screen cb-h-[100dvh] sm:cb-w-96 sm:cb-h-[min(80dvh,550px)]">
-
+    <div className="chatbot-body cb-shadow-lg">
       {/* Header Of The Chatbot Widget */}
-      <div className="chatbot-widget__header cb-justify-between cb-p-3 cb-flex cb-items-center cb-bg-chatbot_primary cb-text-chatbot_primary-foreground sm:cb-rounded-t-2xl cb-rounded-b-none">
-        <div className="cb-flex cb-gap-3 cb-items-center">
-          <LuDot className="cb-text-green-500" size={40} />
-          <h2 className="chatbot-widget__header-heading cb-text-lg cb-font-bold cb-text-center cb-text-chatbot_primary-foreground">
-            {currentTab === 1 && agent?.agentName ? `${agent.agentName} - Agent`: chatbotDetails.chatBotName || "Chatty Assistant"}
-          </h2>
+      <div className="chatbot-body__header">
+        <div className="chatbot-body__header__content">
+          <img
+            src={chatbotDetails?.logoUrl || "https://via.placeholder.com/50"}
+            loading="eager"
+            rel="preload"
+            alt="logo"
+            width={50}
+            height={50}
+            className="chatbot-body__header__content__logo"
+          />
+          <div>
+            <h2>
+               {chatbotDetails.chatBotName || "Assistant"}
+            </h2>
+            <p className="chatbot-body__header__content__status">Online</p>
+          </div>
         </div>
-        <div className="cb-flex cb-space-x-3 cb-items-center">
-          <PiArrowsCounterClockwiseBold
-            onClick={() => resetChat()}
-            role="button"
+        <div className="chatbot-body__header__action cb-space-x-3">
+          <button
             aria-label="Close Chatbot Widget"
-            className="hover:cb-opacity-60 cb-size-6"
-          />
-          <IoClose
-            onClick={() => handleChatBoxClose()}
-            role="button"
+            className="chatbot-body__header__action__reset"
+          >
+            <PiArrowsCounterClockwiseBold onClick={() => resetChat()} />
+          </button>
+          <button
             aria-label="Close Chatbot Widget"
-            className="hover:cb-opacity-60 cb-size-6"
-          />
+            className="chatbot-body__header__action__close"
+          >
+            <IoClose onClick={() => handleChatBoxClose()} />
+          </button>
         </div>
       </div>
 
       {currentTab === 0 ? (
         <>
           {Boolean(threadError) && (
-            <div className=" cb-px-4 cb-py-2">
+            <div className="chatbot-body__error">
               <p>{threadError}</p>
             </div>
           )}
 
           {!Boolean(threadError) && (
-            <ScrollArea className="cb-h-full cb-w-full cb-space-y-2 cb-text-sm cb-text-chatbot_primary-foreground">
+
+              <div className="chatbot-details cb-space-y-2 chatbot_scrollbar chatbot_scrollbar--always">
               {/* Logo and The Name of the business */}
-              <div className="cb-flex cb-flex-col cb-w-full cb-items-center cb-mb-6 chatbot-widget__details-wrapper">
+              <div className="chatbot-details__wrapper">
                 <img
                   src={
                     chatbotDetails?.logoUrl || "https://via.placeholder.com/50"
@@ -109,12 +121,12 @@ const Widget = ({
                   alt="logo"
                   width={80}
                   height={80}
-                  className="mt-3 cb-w-20 cb-h-20 cb-rounded-full cb-object-contain chatbot-widget__details-logo"
+                  className="chatbot-details__wrapper__profile"
                 />
-                <h2 className="cb-text-lg cb-font-bold cb-text-center cb-text-chatbot_foreground chatbot-widget__details-heading">
+                <h2 className="chatbot-details__wrapper__heading">
                   {chatbotDetails?.chatBotName}
                 </h2>
-                <p className="cb-text-chatbot_muted-foreground cb-px-10 cb-text-center chatbot-widget__header-description">
+                <p className="chatbot-details__wrapper__description">
                   {chatbotDetails.chatBotDescription ||
                     "We are here to help you with any questions in regards to our company and our services"}
                 </p>
@@ -123,31 +135,29 @@ const Widget = ({
               {!threadId && (
                 <form
                   onSubmit={handleUserNameFormSubmit}
-                  className=" chatbot-widget__username cb-p-4 cb-space-y-2 cb-text-left"
+                  className="chatbot-form cb-space-y-2"
                 >
-                  <label className="cb-text-chatbot_foreground cb-font-semibold cb-px-1">
-                    Enter Your Name
-                  </label>
-                  <div className="cb-flex cb-flex-row cb-items-center cb-w-full cb-gap-3 ">
-                    <input
-                      type={"text"}
-                      placeholder="👋 Let's be friends, okay?"
-                      aria-label="Type here"
-                      className="chatbot-widget__username-input cb-h-9 cb-rounded-md cb-border cb-border-input cb-bg-transparent cb-text-chatbot_foreground cb-shadow-sm cb-transition-colors file:cb-border-0 file:cb-bg-transparent file:cb-text-sm file:cb-font-medium placeholder:cb-text-muted-foreground focus-visible:cb-outline-none focus-visible:cb-ring-1 disabled:cb-cursor-not-allowed disabled:cb-opacity-50 cb-w-full cb-flex cb-justify-end cb-items-end focus-visible:cb-ring-transparent focus:cb-ring-0 cb-focus cb-px-4 cb-rounded-r-none cb-text-sm"
-                      onChange={(e) => setUserNameInput(e.target.value)}
-                      value={userNameInput}
-                    />
-                    <Button
+                  {/* <label className="chatbot-form--label">Enter Your Name</label> */}
+                  <div className="chatbot-form__input-wrapper">
+                    <button
                       type="submit"
                       aria-label="Enter Your Name"
-                      className="cb-border-s-0 cb-h-9 chatbot-widget__username-submit"
+                      className="chatbot-form__input-wrapper__submit"
                     >
                       {threadLoading ? (
                         <LuLoader size={20} className=" cb-animate-spin" />
                       ) : (
-                        <LuArrowUpRight size={20} />
+                        <LuArrowRight size={20} />
                       )}
-                    </Button>
+                    </button>
+                    <input
+                      type={"text"}
+                      placeholder="👋 Enter Your Name To Begin..."
+                      aria-label="Type here"
+                      className="cb-transition-colors chatbot-input"
+                      onChange={(e) => setUserNameInput(e.target.value)}
+                      value={userNameInput}
+                    />
                   </div>
                 </form>
               )}
@@ -156,7 +166,9 @@ const Widget = ({
                 <Messages logoUrl={chatbotDetails.logoUrl} />
               ) : null}
               <div ref={messagesEndRef}></div>
-            </ScrollArea>
+            </div>
+         
+            
           )}
 
           <MessageForm
@@ -166,50 +178,34 @@ const Widget = ({
         </>
       ) : null}
 
-      {currentTab === 1 ? <RealTimeChat /> : null}
+      {currentTab === 1 ? <RealTimeChat chatbotDetails={chatbotDetails}/> : null}
       {/* Tab Buttons for Lice Chat and AI chat */}
       {villageId ? (
-        <div className="cb-w-full cb-flex cb-p-3 cb-shadow-md  cb-border-t">
+        <div className="chatbot-switcher cb-shadow-md">
           <button
             onClick={() => setCurrentTab(0)}
-            className="cb-flex-1 cb-flex cb-gap-1 cb-flex-col cb-items-center cb-text-sm"
+            className={cn("chatbot-switcher__button", currentTab === 0 ? "chatbot-switcher__button--active" : "")}
           >
             {currentTab === 0 ? (
-              <BsQuestionCircleFill size={17} />
+              <BsQuestionCircleFill size={23} />
             ) : (
-              <GoQuestion size={17} />
+              <GoQuestion size={23} />
             )}
             Ask AI
           </button>
           <button
             onClick={() => setCurrentTab(1)}
-            className="cb-flex-1 cb-flex cb-gap-1 cb-flex-col cb-items-center"
+            className={cn("chatbot-switcher__button", currentTab === 1 ? "chatbot-switcher__button--active" : "")}
           >
             {currentTab === 1 ? (
-              <BsChatRightTextFill size={17} />
+              <BsChatRightTextFill size={23} />
             ) : (
-              <BsChatRightText size={17} />
+              <BsChatRightText size={23} />
             )}
             Live Chat
           </button>
         </div>
-      ) : (
-        null
-      )}
-      {/* {showWatermark && (
-        <div className="watermark cb-text-xs cb-text-center cb-my-1">
-          <p>
-            Made with ❤️ by{" "}
-            <a
-              target="_blank"
-              className="cb-underline"
-              href="https://chatbuild.io/"
-            >
-              Chatbuild Ai 
-            </a>
-          </p>
-        </div>
-      )} */}
+      ) : null}
     </div>
   );
 };
