@@ -1,6 +1,7 @@
+
 import { WidgetProps } from "./types";
-import { default as ChatbotComponent } from "@chatbuild/chatbot";
-// import "../../global.css";
+import { default as ChatbotComponent, ChatbotNoWidget as ChatbotNoWidgetComponent } from "@chatbuild/chatbot";
+
 
 /**
  * A chatbot component that provides a user interface for interacting with a chatbot.
@@ -16,3 +17,7 @@ const Chatbot = (props: WidgetProps) => {
   return <ChatbotComponent {...props} />;
 };
 export default Chatbot;
+
+export const ChatbotNoWidget = (props: WidgetProps) => {
+  return <ChatbotNoWidgetComponent {...props} />;
+}

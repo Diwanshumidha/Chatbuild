@@ -1,123 +1,217 @@
-import { useEffect, useMemo, useState } from "react";
-import { Button } from "../components/ui/button";
+import { LuArrowRight, LuLoader } from "react-icons/lu";
+import { TChatBoxDetails } from "./types";
+
 import { IoClose } from "react-icons/io5";
-import { TChatBoxDetails, WidgetProps } from "./types";
-import { cn, getContrast } from "../lib/utils";
-import Widget from "./widget";
-import { BASE_PATH } from "../lib/constants";
-import WelcomeBox from "./welcomeBox";
 import { useMessages } from "../hooks/use-messages";
 import { useThread } from "../hooks/use-thread";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import Messages from "./messages";
+import MessageForm from "./message-form";
 import { useSuggestions } from "../hooks/use-suggestion-context";
-import { SiChatbot } from "react-icons/si";
+import { PiArrowsCounterClockwiseBold } from "react-icons/pi";
+import RealTimeChat from "./real-time-chat";
+import { BsChatRightText, BsQuestionCircleFill } from "react-icons/bs";
+import { GoQuestion } from "react-icons/go";
+import { BsChatRightTextFill } from "react-icons/bs";
 import { useVillageStore } from "../context/village-context";
+import { cn } from "../lib/utils";
 
-
+type WidgetProps = {
+  chatbotDetails: TChatBoxDetails;
+  handleChatBoxClose: () => void;
+  resetChat: () => void;
+  isOnlyChatbot: boolean;
+};
 const Chatbot = ({
-  apiKey,
-  showWelcomeBox = true,
-  icon,
-  rounded,
-  textColor,
-  themeColor,
+  chatbotDetails,
+  handleChatBoxClose,
+  resetChat,
+  isOnlyChatbot,
 }: WidgetProps) => {
-  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
-  const [isWelcomeBoxOpen, setIsWelcomeBoxOpen] = useState(true);
-  const [chatbotDetails, setChatbotDetails] = useState<null | TChatBoxDetails>(
-    null
-  );
-  const { setMessages } = useMessages();
-  const { resetThread } = useThread();
+  const { setMessages, messages, generationLoading } = useMessages();
+  const { fetchThread, threadError, threadId, threadLoading } = useThread();
   const { setSuggestion } = useSuggestions();
-  const { setVillageId } = useVillageStore();
+  const [userNameInput, setUserNameInput] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null); // Ref for the element to scroll to
+  const [currentTab, setCurrentTab] = useState(0);
+  const { villageId } = useVillageStore();
+
+  const handleUserNameFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (userNameInput) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          from: "chatbot",
+          message:
+            chatbotDetails?.welcomeMessage || "Hello! How can I help you?",
+        },
+      ]);
+
+      fetchThread(userNameInput, chatbotDetails.apiKey);
+      setSuggestion(chatbotDetails.suggestionQuestions);
+    }
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: 'nearest' });
+  };
 
   useEffect(() => {
-    const fetchBot = async function () {
-      console.log(BASE_PATH + "/chatbot");
-      const response = await fetch(BASE_PATH + `/chatbot/${apiKey}`);
-      if (!response.ok) {
-        console.error(
-          "[CHATBUILD_AI] There Was an Error While Loading The Chatbot"
-        );
-        return;
-      }
-
-      const data = await response.json();
-      if (!data.data) {
-        console.error(
-          "[CHATBUILD_AI] There Was an Error While Loading The Chatbot"
-        );
-        return;
-      }
-
-      if (data.village) {
-        console.log(data.village.id);
-        setVillageId(data.village.id);
-      }
-      const Details = data.data;
-      const textColor = getContrast(themeColor || Details.colorScheme);
-      setChatbotDetails({ ...Details, textColor });
-    };
-
-    fetchBot();
-  }, []);
-
-  const widgetStyles = useMemo(() => {
-    return {
-      "--chatbot-text-color":
-        textColor || getContrast(chatbotDetails?.colorScheme || ""),
-      "--chatbot-theme-color":
-        themeColor || chatbotDetails?.colorScheme || "orange",
-    };
-  }, [chatbotDetails]);
-
-  const handleChatBoxClose = () => {
-    setIsChatbotOpen(false);
-  };
-
-  if (!chatbotDetails || !chatbotDetails.chatBotName) {
-    return <></>;
-  }
-
-  const resetChat = () => {
-    setMessages([]);
-    resetThread();
-    setSuggestion([]);
-    setIsChatbotOpen(false);
-  };
-
-  const Icon = icon ? icon : SiChatbot;
+    scrollToBottom();
+  }, [messages, generationLoading]);
 
   return (
-    <div className="chatbot-widget cb-transition-all" style={widgetStyles as React.CSSProperties}>
-      {isWelcomeBoxOpen && !isChatbotOpen && showWelcomeBox ? (
-        <WelcomeBox
-          setIsChatbotOpen={setIsChatbotOpen}
-          setIsWelcomeBoxOpen={setIsWelcomeBoxOpen}
-          alertMessage={chatbotDetails?.alertMessage}
-          chatbotName={chatbotDetails?.chatBotName}
-        />
+    <div
+      className={cn(
+       !isOnlyChatbot ? "chatbot-body--fixed-position" : null,
+        "chatbot-body cb-shadow-lg"
+      )}
+    >
+      {/* Header Of The Chatbot Widget */}
+      <div className="chatbot-body__header">
+        <div className="chatbot-body__header__content">
+          <img
+            src={chatbotDetails?.logoUrl || "https://via.placeholder.com/50"}
+            loading="eager"
+            rel="preload"
+            alt="logo"
+            width={50}
+            height={50}
+            className="chatbot-body__header__content__logo"
+          />
+          <div>
+            <h2>{chatbotDetails.chatBotName || "Assistant"}</h2>
+            <p className="chatbot-body__header__content__status">Online</p>
+          </div>
+        </div>
+        <div className="chatbot-body__header__action cb-space-x-3">
+          <button
+            aria-label="Close Chatbot Widget"
+            className="chatbot-body__header__action__reset"
+          >
+            <PiArrowsCounterClockwiseBold onClick={() => resetChat()} />
+          </button>
+          <button
+            aria-label="Close Chatbot Widget"
+            className="chatbot-body__header__action__close"
+          >
+            <IoClose onClick={() => handleChatBoxClose()} />
+          </button>
+        </div>
+      </div>
+
+      {currentTab === 0 ? (
+        <>
+          {Boolean(threadError) && (
+            <div className="chatbot-body__error">
+              <p>{threadError}</p>
+            </div>
+          )}
+
+          {!Boolean(threadError) && (
+            <div className="chatbot-details cb-space-y-2 chatbot_scrollbar chatbot_scrollbar--always">
+              {/* Logo and The Name of the business */}
+              <div className="chatbot-details__wrapper">
+                <img
+                  src={
+                    chatbotDetails?.logoUrl || "https://via.placeholder.com/50"
+                  }
+                  loading="eager"
+                  rel="preload"
+                  alt="logo"
+                  width={80}
+                  height={80}
+                  className="chatbot-details__wrapper__profile"
+                />
+                <h2 className="chatbot-details__wrapper__heading">
+                  {chatbotDetails?.chatBotName}
+                </h2>
+                <p className="chatbot-details__wrapper__description">
+                  {chatbotDetails.chatBotDescription ||
+                    "We are here to help you with any questions in regards to our company and our services"}
+                </p>
+              </div>
+
+              {!threadId && (
+                <form
+                  onSubmit={handleUserNameFormSubmit}
+                  className="chatbot-form cb-space-y-2"
+                >
+                  {/* <label className="chatbot-form--label">Enter Your Name</label> */}
+                  <div className="chatbot-form__input-wrapper">
+                    <button
+                      type="submit"
+                      aria-label="Enter Your Name"
+                      className="chatbot-form__input-wrapper__submit"
+                    >
+                      {threadLoading ? (
+                        <LuLoader size={20} className=" cb-animate-spin" />
+                      ) : (
+                        <LuArrowRight size={20} />
+                      )}
+                    </button>
+                    <input
+                      type={"text"}
+                      placeholder="👋 Enter Your Name To Begin..."
+                      aria-label="Type here"
+                      className="cb-transition-colors chatbot-input"
+                      onChange={(e) => setUserNameInput(e.target.value)}
+                      value={userNameInput}
+                    />
+                  </div>
+                </form>
+              )}
+
+              {Boolean(threadId) && !threadLoading ? (
+                <Messages logoUrl={chatbotDetails.logoUrl} />
+              ) : null}
+              <div ref={messagesEndRef}></div>
+            </div>
+          )}
+
+          <MessageForm
+            scrollToBottom={scrollToBottom}
+            apiKey={chatbotDetails.apiKey}
+          />
+        </>
       ) : null}
 
-      <Button
-        onClick={() => setIsChatbotOpen(!isChatbotOpen)}
-        className={cn(
-          "chatbot-widget__button cb-transition-all",
-          rounded && "chatbot-widget__button--rounded"
-        )}
-      >
-        {isChatbotOpen ? (
-          <IoClose className="chatbot-widget__icon chatbot-widget__icon--close" />
-        ) : (
-          <Icon className="chatbot-widget__icon chatbot-widget__icon--open" />
-        )}
-      </Button>
-      {isChatbotOpen ? (
-        <Widget
-          resetChat={resetChat}
-          chatbotDetails={chatbotDetails}
-          handleChatBoxClose={handleChatBoxClose}
-        />
+      {currentTab === 1 ? (
+        <RealTimeChat chatbotDetails={chatbotDetails} />
+      ) : null}
+      {/* Tab Buttons for Lice Chat and AI chat */}
+      {villageId ? (
+        <div className="chatbot-switcher cb-shadow-md">
+          <button
+            onClick={() => setCurrentTab(0)}
+            className={cn(
+              "chatbot-switcher__button",
+              currentTab === 0 ? "chatbot-switcher__button--active" : ""
+            )}
+          >
+            {currentTab === 0 ? (
+              <BsQuestionCircleFill size={23} />
+            ) : (
+              <GoQuestion size={23} />
+            )}
+            Ask AI
+          </button>
+          <button
+            onClick={() => setCurrentTab(1)}
+            className={cn(
+              "chatbot-switcher__button",
+              currentTab === 1 ? "chatbot-switcher__button--active" : ""
+            )}
+          >
+            {currentTab === 1 ? (
+              <BsChatRightTextFill size={23} />
+            ) : (
+              <BsChatRightText size={23} />
+            )}
+            Live Chat
+          </button>
+        </div>
       ) : null}
     </div>
   );

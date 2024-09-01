@@ -3,7 +3,7 @@ import { AssistantContextProvider } from "../context/assistant-context";
 import { MessagesContextProvider } from "../context/message-context";
 import { SuggestionContextProvider } from "../context/suggestion-context";
 import { isValidUUID } from "../lib/utils";
-import Widget from "./chatbot";
+import Widget from "./widget";
 import { WidgetProps } from "./types";
 import "../../dist/output.css";
 import {
@@ -11,7 +11,7 @@ import {
   VillageContextProvider,
 } from "../context/village-context";
 import { SocketProvider } from "../hooks/use-consumer-socket";
-// import "../../global.css";
+import ChatbotOnly from "./only-chatbot";
 
 /**
  * A chatbot component that provides a user interface for interacting with a chatbot.
@@ -50,3 +50,32 @@ const Chatbot = (props: WidgetProps) => {
   );
 };
 export default Chatbot;
+
+
+export const ChatbotNoWidget = (props: WidgetProps) => {
+  if (!props.apiKey) {
+    return <p className="cb-text-red-400">Please Provide the Api Key</p>;
+  }
+  if (!isValidUUID(props.apiKey)) {
+    return <p className="cb-text-red-400">Please Provide An Valid Api Key</p>;
+  }
+
+  return (
+    <ErrorBoundary fallback={<></>}>
+    <AgentContextProvider>
+      <VillageContextProvider>
+        <SocketProvider>
+          <MessagesContextProvider>
+            <AssistantContextProvider>
+              <SuggestionContextProvider>
+                <ChatbotOnly {...props} />
+              </SuggestionContextProvider>
+            </AssistantContextProvider>
+          </MessagesContextProvider>
+        </SocketProvider>
+      </VillageContextProvider>
+    </AgentContextProvider>
+  </ErrorBoundary>
+  )
+
+}

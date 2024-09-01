@@ -1,28 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "../components/ui/button";
-import { IoClose } from "react-icons/io5";
 import { TChatBoxDetails, WidgetProps } from "./types";
-import { cn, getContrast } from "../lib/utils";
-import Chatbot from "./chatbot";
+import { getContrast } from "../lib/utils";
 import { BASE_PATH } from "../lib/constants";
-import WelcomeBox from "./welcomeBox";
 import { useMessages } from "../hooks/use-messages";
 import { useThread } from "../hooks/use-thread";
 import { useSuggestions } from "../hooks/use-suggestion-context";
-import { SiChatbot } from "react-icons/si";
 import { useVillageStore } from "../context/village-context";
+import Chatbot from "./chatbot";
 
-
-const Widget = ({
-  apiKey,
-  showWelcomeBox = true,
-  icon,
-  rounded,
-  textColor,
-  themeColor,
-}: WidgetProps) => {
-  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
-  const [isWelcomeBoxOpen, setIsWelcomeBoxOpen] = useState(true);
+const ChatbotOnly = ({ apiKey, textColor, themeColor }: WidgetProps) => {
   const [chatbotDetails, setChatbotDetails] = useState<null | TChatBoxDetails>(
     null
   );
@@ -71,10 +57,6 @@ const Widget = ({
     };
   }, [chatbotDetails]);
 
-  const handleChatBoxClose = () => {
-    setIsChatbotOpen(false);
-  };
-
   if (!chatbotDetails || !chatbotDetails.chatBotName) {
     return <></>;
   }
@@ -83,45 +65,21 @@ const Widget = ({
     setMessages([]);
     resetThread();
     setSuggestion([]);
-    setIsChatbotOpen(false);
   };
 
-  const Icon = icon ? icon : SiChatbot;
-
   return (
-    <div className="chatbot-widget chatbot-widget--fixed-position cb-transition-all" style={widgetStyles as React.CSSProperties}>
-      {isWelcomeBoxOpen && !isChatbotOpen && showWelcomeBox ? (
-        <WelcomeBox
-          setIsChatbotOpen={setIsChatbotOpen}
-          setIsWelcomeBoxOpen={setIsWelcomeBoxOpen}
-          alertMessage={chatbotDetails?.alertMessage}
-          chatbotName={chatbotDetails?.chatBotName}
-        />
-      ) : null}
-
-      <Button
-        onClick={() => setIsChatbotOpen(!isChatbotOpen)}
-        className={cn(
-          "chatbot-widget__button cb-transition-all",
-          rounded && "chatbot-widget__button--rounded"
-        )}
-      >
-        {isChatbotOpen ? (
-          <IoClose className="chatbot-widget__icon chatbot-widget__icon--close" />
-        ) : (
-          <Icon className="chatbot-widget__icon chatbot-widget__icon--open" />
-        )}
-      </Button>
-      {isChatbotOpen ? (
-        <Chatbot
-          resetChat={resetChat}
-          chatbotDetails={chatbotDetails}
-          handleChatBoxClose={handleChatBoxClose}
-          isOnlyChatbot={false}
-        />
-      ) : null}
+    <div
+      className="chatbot-widget cb-transition-all"
+      style={widgetStyles as React.CSSProperties}
+    >
+      <Chatbot
+        resetChat={resetChat}
+        chatbotDetails={chatbotDetails}
+        handleChatBoxClose={() => {}}
+        isOnlyChatbot={true}
+      />
     </div>
   );
 };
 
-export default Widget;
+export default ChatbotOnly;
