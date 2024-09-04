@@ -738,7 +738,7 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 
 // Chat Widget Body
 .chatbot-widget {
-  z-index: 150;
+  z-index: 1000;
   padding: 0.75rem;
   color: hsl(var(--chatbot-foreground));
   .chatbot-widget__button {
