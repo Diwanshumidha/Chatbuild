@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { handleDisconnection, sendEmailonConsumerJoin, verifyAccessKey } from "./lib/utils";
+import { handleDisconnection, sendNotificationOnConsumerJoin, verifyAccessKey } from "./lib/utils";
 import { Village } from "./village";
 
 type JoinPayload = {
@@ -52,7 +52,7 @@ export class SocketHandler {
             return socket.emit("error", { message: "Consumer Email and Message are required" });
           }
           village.joinConsumer(socket.id, name, email, message);
-          sendEmailonConsumerJoin({name,email,message,villageId:village.villageId})
+          sendNotificationOnConsumerJoin({name,email,message,villageId:village.villageId})
 
         } else if (role === "agent") {
           if(!accessKey) return socket.emit("error", { message: "Access Key is required" });

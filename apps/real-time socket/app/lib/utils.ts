@@ -88,13 +88,13 @@ export async function verifyAccessKey(accessKey: string, villageId: string) {
   }
 }
 
-type SendEmailonConsumerJoinProps = {
+type SendNotificationOnConsumerJoinProps = {
   name:string,
   email:string,
   message:string,
   villageId:string
 }
-export async function sendEmailonConsumerJoin(payload:SendEmailonConsumerJoinProps){
+export async function sendNotificationOnConsumerJoin(payload:SendNotificationOnConsumerJoinProps){
   try {
     const response =  fetch(`${process.env.BASE_SERVER_PATH}/village/mails/consumer-waiting`, {
       method: "POST",
