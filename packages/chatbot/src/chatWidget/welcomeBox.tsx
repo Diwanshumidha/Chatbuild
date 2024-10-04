@@ -18,7 +18,7 @@ const WelcomeBox = ({
   return (
     <div role="button" className="chatbot-widget__welcome cb-shadow-lg">
       <div className="chatbot-widget__welcome__close">
-        <button onClick={() => setIsWelcomeBoxOpen(false)}>
+        <button aria-label="close welcome box" onClick={() => setIsWelcomeBoxOpen(false)}>
           <IoClose />
         </button>
       </div>

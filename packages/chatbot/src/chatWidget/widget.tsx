@@ -101,6 +101,7 @@ const Widget = ({
 
       <Button
         onClick={() => setIsChatbotOpen(!isChatbotOpen)}
+        aria-label={isChatbotOpen ? "Close Chatbot" : "Open Chatbot"}
         className={cn(
           "chatbot-widget__button cb-transition-all",
           rounded && "chatbot-widget__button--rounded"
