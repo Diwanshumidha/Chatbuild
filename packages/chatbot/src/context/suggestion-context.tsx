@@ -1,12 +1,12 @@
 import { useLocalStorage } from "../hooks/use-local-storage";
-import { Dispatch, SetStateAction, createContext } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 type TSuggestionContext = {
   suggestion: string[];
   setSuggestion: Dispatch<SetStateAction<string[]>>;
 };
 
-export const SuggestionContext = createContext<TSuggestionContext | null>(null);
+export const SuggestionContext = React.createContext<TSuggestionContext | null>(null);
 const randomQuestions = [
   "What is your Favorite color?",
   "Siblings?",

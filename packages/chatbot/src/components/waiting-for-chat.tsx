@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {AgentNotThere, WaitingIllustration }from "./waiting-svg";
 
 const WaitingForChat = () => {
-  const [isTimedOut, setIsTimedOut] = useState(false);
+  const [isTimedOut, setIsTimedOut] = React.useState(false);
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsTimedOut(true);

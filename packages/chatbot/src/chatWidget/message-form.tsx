@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React from "react";
 import { useThread } from "../hooks/use-thread";
 import { useMessages } from "../hooks/use-messages";
 import { BASE_PATH } from "../lib/constants";
@@ -11,7 +11,7 @@ type MessageFormProps = {
 };
 
 const MessageForm = ({ apiKey, scrollToBottom }: MessageFormProps) => {
-  const [userMessage, setUserMessage] = useState("");
+  const [userMessage, setUserMessage] = React.useState("");
   const { setSuggestion, suggestion } = useSuggestions();
   const { setMessages, setGenerationLoading, generationLoading } =
     useMessages();
@@ -84,7 +84,10 @@ const MessageForm = ({ apiKey, scrollToBottom }: MessageFormProps) => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="chatbot-input chatbot-message-form__form">
+      <form
+        onSubmit={handleSubmit}
+        className="chatbot-input chatbot-message-form__form"
+      >
         <input
           type={"text"}
           placeholder="Message..."

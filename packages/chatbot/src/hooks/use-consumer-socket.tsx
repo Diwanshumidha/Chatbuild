@@ -1,10 +1,10 @@
 import { Socket, io } from "socket.io-client";
-import {
+import React, {
   ReactNode,
   createContext,
   useContext,
-  useEffect,
-  useState,
+  useEffect
+
 } from "react";
 import { useAgentStore, useVillageStore } from "../context/village-context";
 import { SOCKET_SERVER_PATH } from "../lib/constants";
@@ -22,7 +22,7 @@ const SocketContext = createContext<SocketContextProps | undefined>(undefined);
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const { addMessage, setAgentLeft, setRoom, resetMessages, setIsAgentTyping } =
     useAgentStore();
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [socket, setSocket] = React.useState<Socket | null>(null);
   const { playSound } = useSound();
 
   const { villageId } = useVillageStore();

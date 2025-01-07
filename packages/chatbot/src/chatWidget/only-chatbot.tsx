@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { TChatBoxDetails, WidgetProps } from "./types";
 import { getContrast } from "../lib/utils";
 import { BASE_PATH } from "../lib/constants";
@@ -9,7 +9,7 @@ import { useVillageStore } from "../context/village-context";
 import Chatbot from "./chatbot";
 
 const ChatbotOnly = ({ apiKey, textColor, themeColor }: WidgetProps) => {
-  const [chatbotDetails, setChatbotDetails] = useState<null | TChatBoxDetails>(
+  const [chatbotDetails, setChatbotDetails] = React.useState<null | TChatBoxDetails>(
     null
   );
   const { setMessages } = useMessages();
@@ -73,6 +73,7 @@ const ChatbotOnly = ({ apiKey, textColor, themeColor }: WidgetProps) => {
       style={widgetStyles as React.CSSProperties}
     >
       <Chatbot
+      widgetStyles={widgetStyles}
         resetChat={resetChat}
         chatbotDetails={chatbotDetails}
         handleChatBoxClose={() => {}}

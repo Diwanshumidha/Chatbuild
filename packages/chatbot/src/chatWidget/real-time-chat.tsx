@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useAgentStore, useVillageStore } from "../context/village-context";
 import { useSocket } from "../hooks/use-consumer-socket";
 import { Icons } from "../components/ui/Icons";
@@ -16,7 +16,7 @@ const RealTimeChat = ({
   const { currentRoomId, hasAgentLeft, agent, isAgentTyping } = useAgentStore();
   const { join, sendMessage } = useSocket();
 
-  const [name, setName] = useState("");
+  const [name, setName] = React.useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [userMessage, setUserMessage] = useState("");

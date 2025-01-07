@@ -1,6 +1,6 @@
 import { LuArrowRight, LuLoader } from "react-icons/lu";
 import { TChatBoxDetails } from "./types";
-
+import React from "react";
 import { IoClose } from "react-icons/io5";
 import { useMessages } from "../hooks/use-messages";
 import { useThread } from "../hooks/use-thread";
@@ -15,26 +15,38 @@ import { GoQuestion } from "react-icons/go";
 import { BsChatRightTextFill } from "react-icons/bs";
 import { useVillageStore } from "../context/village-context";
 import { cn } from "../lib/utils";
+import BookingTab from "./booking-tab";
+import { MdCallToAction, MdOutlineCallToAction } from "react-icons/md";
 
 type WidgetProps = {
   chatbotDetails: TChatBoxDetails;
   handleChatBoxClose: () => void;
   resetChat: () => void;
   isOnlyChatbot: boolean;
+  widgetStyles: {
+    [key: string]: string;
+  };
 };
 const Chatbot = ({
   chatbotDetails,
   handleChatBoxClose,
   resetChat,
   isOnlyChatbot,
+  widgetStyles,
 }: WidgetProps) => {
   const { setMessages, messages, generationLoading } = useMessages();
   const { fetchThread, threadError, threadId, threadLoading } = useThread();
   const { setSuggestion } = useSuggestions();
   const [userNameInput, setUserNameInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null); // Ref for the element to scroll to
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = React.useState(0);
   const { villageId } = useVillageStore();
+
+  const enabledFeatures = {
+    aiChat: true,
+    liveChat: !!villageId,
+    bookingFunctionality: chatbotDetails.isBookingEnabled,
+  };
 
   const handleUserNameFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,7 +66,10 @@ const Chatbot = ({
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: 'nearest' });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
   };
 
   useEffect(() => {
@@ -64,7 +79,7 @@ const Chatbot = ({
   return (
     <div
       className={cn(
-       !isOnlyChatbot ? "chatbot-body--fixed-position" : null,
+        !isOnlyChatbot ? "chatbot-body--fixed-position" : null,
         "chatbot-body cb-shadow-lg"
       )}
     >
@@ -180,8 +195,14 @@ const Chatbot = ({
       {currentTab === 1 ? (
         <RealTimeChat chatbotDetails={chatbotDetails} />
       ) : null}
+      {currentTab === 2 ? (
+        <BookingTab
+          apiKey={chatbotDetails.apiKey}
+          widgetStyles={widgetStyles}
+        />
+      ) : null}
       {/* Tab Buttons for Lice Chat and AI chat */}
-      {villageId ? (
+      {Object.values(enabledFeatures).filter(Boolean).length > 1 ? (
         <div className="chatbot-switcher cb-shadow-md">
           <button
             onClick={() => setCurrentTab(0)}
@@ -197,20 +218,38 @@ const Chatbot = ({
             )}
             Ask AI
           </button>
-          <button
-            onClick={() => setCurrentTab(1)}
-            className={cn(
-              "chatbot-switcher__button",
-              currentTab === 1 ? "chatbot-switcher__button--active" : ""
-            )}
-          >
-            {currentTab === 1 ? (
-              <BsChatRightTextFill size={23} />
-            ) : (
-              <BsChatRightText size={23} />
-            )}
-            Live Chat
-          </button>
+          {enabledFeatures.liveChat && (
+            <button
+              onClick={() => setCurrentTab(1)}
+              className={cn(
+                "chatbot-switcher__button",
+                currentTab === 1 ? "chatbot-switcher__button--active" : ""
+              )}
+            >
+              {currentTab === 1 ? (
+                <BsChatRightTextFill size={23} />
+              ) : (
+                <BsChatRightText size={23} />
+              )}
+              Live Chat
+            </button>
+          )}
+          {enabledFeatures.bookingFunctionality && (
+            <button
+              onClick={() => setCurrentTab(2)}
+              className={cn(
+                "chatbot-switcher__button",
+                currentTab === 2 ? "chatbot-switcher__button--active" : ""
+              )}
+            >
+              {currentTab === 2 ? (
+                <MdCallToAction size={23} />
+              ) : (
+                <MdOutlineCallToAction size={23} />
+              )}
+              Book A Meeting
+            </button>
+          )}
         </div>
       ) : null}
     </div>

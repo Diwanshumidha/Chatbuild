@@ -5,6 +5,7 @@ import { SuggestionContextProvider } from "../context/suggestion-context";
 import { isValidUUID } from "../lib/utils";
 import Widget from "./widget";
 import { WidgetProps } from "./types";
+
 import "../../dist/output.css";
 import {
   AgentContextProvider,
@@ -12,6 +13,7 @@ import {
 } from "../context/village-context";
 import { SocketProvider } from "../hooks/use-consumer-socket";
 import ChatbotOnly from "./only-chatbot";
+import React from "react";
 
 /**
  * A chatbot component that provides a user interface for interacting with a chatbot.
@@ -23,7 +25,7 @@ import ChatbotOnly from "./only-chatbot";
  * @param {IconType} [props.icon] - The icon to be displayed in the Open Button.
  * @returns {JSX.Element} The rendered Chatbot component.
  */
-const Chatbot = (props: WidgetProps) => {
+const Chatbot: React.FC<WidgetProps> = (props: WidgetProps) => {
   if (!props.apiKey) {
     return <p className="cb-text-red-400">Please Provide the Api Key</p>;
   }
@@ -51,7 +53,6 @@ const Chatbot = (props: WidgetProps) => {
 };
 export default Chatbot;
 
-
 export const ChatbotNoWidget = (props: WidgetProps) => {
   if (!props.apiKey) {
     return <p className="cb-text-red-400">Please Provide the Api Key</p>;
@@ -62,20 +63,19 @@ export const ChatbotNoWidget = (props: WidgetProps) => {
 
   return (
     <ErrorBoundary fallback={<></>}>
-    <AgentContextProvider>
-      <VillageContextProvider>
-        <SocketProvider>
-          <MessagesContextProvider>
-            <AssistantContextProvider>
-              <SuggestionContextProvider>
-                <ChatbotOnly {...props} />
-              </SuggestionContextProvider>
-            </AssistantContextProvider>
-          </MessagesContextProvider>
-        </SocketProvider>
-      </VillageContextProvider>
-    </AgentContextProvider>
-  </ErrorBoundary>
-  )
-
-}
+      <AgentContextProvider>
+        <VillageContextProvider>
+          <SocketProvider>
+            <MessagesContextProvider>
+              <AssistantContextProvider>
+                <SuggestionContextProvider>
+                  <ChatbotOnly {...props} />
+                </SuggestionContextProvider>
+              </AssistantContextProvider>
+            </MessagesContextProvider>
+          </SocketProvider>
+        </VillageContextProvider>
+      </AgentContextProvider>
+    </ErrorBoundary>
+  );
+};

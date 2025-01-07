@@ -4,7 +4,7 @@ import { TMessage } from "../context/message-context";
 import Markdown from "react-markdown";
 import { IoClose } from "react-icons/io5";
 import { LuArrowUpRight } from "react-icons/lu";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useThread } from "../hooks/use-thread";
 import { BASE_PATH } from "../lib/constants";
 import { cn } from "../lib/utils";
@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 
 const Messages = ({ logoUrl }: { logoUrl: string }) => {
   const { messages, generationLoading } = useMessages();
-  const [showEmailCapture, setShowEmailCapture] = useState(true);
+  const [showEmailCapture, setShowEmailCapture] = React.useState(true);
   const [email, setEmail] = useState("");
   const { threadId } = useThread();
 

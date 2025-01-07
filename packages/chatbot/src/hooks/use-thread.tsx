@@ -1,8 +1,8 @@
 import { AssistantContext } from "../context/assistant-context";
-import { useContext } from "react";
+import React from "react";
 
 export const useThread = () => {
-  const context = useContext(AssistantContext);
+  const context = React.useContext(AssistantContext);
 
   // if the context isn't defined, throw an error
   if (context === null) {

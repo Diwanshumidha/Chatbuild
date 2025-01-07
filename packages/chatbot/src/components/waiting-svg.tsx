@@ -1,3 +1,4 @@
+import React from "react";
 
 export const WaitingIllustration = (props:React.SVGProps<SVGSVGElement>) => (
   <svg

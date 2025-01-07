@@ -1,3 +1,5 @@
+
+
 export type WidgetProps = {
   apiKey: string;
   themeColor?: string;
@@ -18,4 +20,5 @@ export type TChatBoxDetails = {
   textColor: string;
   suggestionQuestions: string[];
   alertMessage: string;
+  isBookingEnabled: boolean;
 };

@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import React, { createContext, useState } from "react";
 import { BASE_PATH } from "../lib/constants";
 import { useLocalStorage } from "../hooks/use-local-storage";
 
@@ -22,7 +22,7 @@ export function AssistantContextProvider({
 }) {
   const [threadId, setThreadId] = useLocalStorage("threadId", "");
   // const [threadId, setThreadId] = useState("");
-  const [threadError, setThreadError] = useState("");
+  const [threadError, setThreadError] = React.useState("");
   const [threadLoading, setThreadLoading] = useState(false);
 
   const fetchThread = async (userName: string, apiKey: string) => {

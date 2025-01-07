@@ -1,8 +1,8 @@
 import { SuggestionContext } from "../context/suggestion-context";
-import { useContext } from "react";
+import React from "react";
 
 export const useSuggestions = () => {
-  const context = useContext(SuggestionContext);
+  const context = React.useContext(SuggestionContext);
 
   if (context === null) {
     throw new Error(

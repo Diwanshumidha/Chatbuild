@@ -451,7 +451,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   }
 }
 
-.chatbot-widget {
+.chatbot-widget,
+.chatbot-calendar,
+.cb-SelectContent {
   --chatbot-background: 0 0% 100%;
   --chatbot-foreground: 222.2 84% 4.9%;
 
@@ -734,7 +736,27 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
       opacity: 0.5;
     }
   }
+  .chatbot-button--outline {
+    background-color: transparent !important;
+    border-width: 1px;
+    padding: 0.5rem 0.25rem;
+    width: 100%;
+    text-align: start;
+    justify-content: start;
+    border-color: hsl(var(--chatbot-input));
+    color: hsl(var(--chatbot-text-foreground));
+    &:hover {
+      background-color: hsl(var(--chatbot-muted)) !important;
+      color: hsl(var(--chatbot-text-foreground)) !important;
+    }
+  }
 }
+.chatbot-widget {
+  .chatbot-button-placeholder-text {
+    color: hsl(var(--chatbot-muted-foreground));
+}
+}
+
 
 // Chat Widget Body
 .chatbot-widget {
@@ -1504,3 +1526,608 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     font-size: 16px !important;
   }
 }
+
+.chatbot-widget .booking-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 0%;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  &__user-details-form {
+    padding: 1rem /* 16px */;
+    width: 100%;
+    text-align: left;
+    label {
+      color: hsl(var(--chatbot-foreground));
+      font-weight: 600;
+      padding-left: 0.25rem /* 4px */;
+      padding-right: 0.25rem /* 4px */;
+    }
+    &__input-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 0.75rem /* 12px */;
+      &__text-area {
+        height: initial;
+      }
+      &__submit-button {
+        border-inline-start-width: 0px;
+        width: 100%;
+        height: 2.25rem /* 36px */;
+        color: var(--chatbot-text-color);
+        border-radius: var(--chatbot-radius);
+        background-color: var(--chatbot-theme-color);
+      }
+    }
+    .icon {
+      margin-right: 0.5rem;
+      height: 1rem /* 16px */;
+      width: 1rem /* 16px */;
+    }
+  }
+ 
+}
+
+.chatbot-widget .booking-form__header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  > h2 {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+  }
+  > p {
+    font-size: 0.875rem /* 14px */;
+    line-height: 1.25rem /* 20px */;
+    color: hsl(var(--chatbot-muted-foreground));
+  }
+}
+
+// .chatbot-calendar {
+//   padding: 0.75rem;
+//   background-color: black;
+//   color: hsl(var(--chatbot-foreground));
+//   .months {
+//     display: flex;
+
+//     flex-direction: column;
+//     @media (min-width: 640px) {
+//       flex-direction: row;
+//     }
+//   }
+//   .caption {
+//     display: flex;
+//     justify-content: center;
+//     padding-top: 0.25rem;
+//     position: relative;
+//     align-items: center;
+//   }
+//   .caption_label {
+//     font-size: 0.875rem /* 14px */;
+//     line-height: 1.25rem /* 20px */;
+//     font-weight: 500;
+//   }
+//   .nav {
+//     display: flex;
+//     align-items: center;
+//     > button {
+//     height: 1.75rem /* 28px */;
+//     width: 1.75rem /* 28px */;
+//     background-color: transparent;
+//     padding: 0rem;
+//     opacity: 0.5;
+//     &:hover {
+//       opacity: 1;
+//     }
+//   }
+//   .rdp-button_previous {
+//      position: absolute;
+//     left: 0.25rem;
+//   }
+//   .rdp-button_next {
+//     position: absolute;
+//     right: 0.25rem;
+//   }
+//   }
+
+//   .table {
+//     width: 100%;
+//     border-collapse: collapse;
+//   }
+//   .head_row {
+//     display: flex;
+//   }
+//   .head_cell {
+//     color: hsl(var(--chatbot-muted-foreground));
+//     border-radius: calc(var(--chatbot-radius) - 2px);
+//     width: 2rem /* 32px */;
+//     font-weight: 400;
+//     font-size: 0.8rem;
+//   }
+//   .row {
+//     display: flex;
+//     width: 100%;
+//     margin-top: 0.5rem;
+//   }
+//   .cell {
+//     position: relative;
+//     padding: 0rem;
+//     text-align: center;
+//     font-size: 0.875rem /* 14px */;
+//     line-height: 1.25rem /* 20px */;
+//     &:focus-within {
+//       position: relative;
+//       z-index: 20;
+//     }
+//     &:has([aria-selected]) {
+//       background-color: hsl(var(--chatbot-foreground) / 0.4);
+//     }
+//     &:has([aria-selected].day-outside) {
+//       background-color: hsl(var(--chatbot-foreground) / 0.1);
+//     }
+//     &:has([aria-selected].day-range-end) {
+//       border-top-right-radius: calc(var(--chatbot-radius) - 2px);
+//       border-bottom-right-radius: calc(var(--chatbot-radius) - 2px);
+//     }
+//   }
+//   .cell--range {
+//     &:has(> .day-range-end) {
+//       border-top-right-radius: calc(var(--chatbot-radius) - 2px);
+//       border-bottom-right-radius: calc(var(--chatbot-radius) - 2px);
+//     }
+//     &:has(> .day-range-start) {
+//       border-top-left-radius: calc(var(--chatbot-radius) - 2px);
+//       border-bottom-left-radius: calc(var(--chatbot-radius) - 2px);
+//     }
+//     &:has([aria-selected]):first-child {
+//       border-top-left-radius: calc(var(--chatbot-radius) - 2px);
+//       border-bottom-left-radius: calc(var(--chatbot-radius) - 2px);
+//     }
+//     &:has([aria-selected]):last-child {
+//       border-top-right-radius: calc(var(--chatbot-radius) - 2px);
+//       border-bottom-right-radius: calc(var(--chatbot-radius) - 2px);
+//     }
+//   }
+//   .no_cell--range {
+//     &:has([aria-selected]) {
+//       border-radius: calc(var(--chatbot-radius) - 2px);
+//   }
+//   }
+// }
+
+.chatbot-calendar.rdp-root {
+  --rdp-accent-color: blue; /* The accent color used for selected days and UI elements. */
+
+  --rdp-accent-background-color: #f0f0ff; /* The accent background color used for selected days and UI elements. */
+
+  --rdp-day-height: 44px; /* The height of the day cells. */
+  --rdp-day-width: 44px; /* The width of the day cells. */
+
+  --rdp-day_button-border-radius: 100%; /* The border radius of the day cells. */
+  --rdp-day_button-border: 2px solid transparent; /* The border of the day cells. */
+  --rdp-day_button-height: 42px; /* The height of the day cells. */
+  --rdp-day_button-width: 42px; /* The width of the day cells. */
+
+  --rdp-selected-border: 2px solid var(--rdp-accent-color); /* The border of the selected days. */
+  --rdp-disabled-opacity: 0.5; /* The opacity of the disabled days. */
+  --rdp-outside-opacity: 0.75; /* The opacity of the days outside the current month. */
+  --rdp-today-color: var(
+    --rdp-accent-color
+  ); /* The color of the today's date. */
+
+  --rdp-dropdown-gap: 0.5rem; /* The gap between the dropdowns used in the month captons. */
+
+  --rdp-months-gap: 2rem; /* The gap between the months in the multi-month view. */
+
+  --rdp-nav_button-disabled-opacity: 0.5; /* The opacity of the disabled navigation buttons. */
+  --rdp-nav_button-height: 2.25rem; /* The height of the navigation buttons. */
+  --rdp-nav_button-width: 2.25rem; /* The width of the navigation buttons. */
+  --rdp-nav-height: 2.75rem; /* The height of the navigation bar. */
+
+  --rdp-range_middle-background-color: var(
+    --rdp-accent-background-color
+  ); /* The color of the background for days in the middle of a range. */
+  --rdp-range_middle-color: inherit; /* The color of the range text. */
+
+  --rdp-range_start-color: white; /* The color of the range text. */
+  --rdp-range_start-background: linear-gradient(
+    var(--rdp-gradient-direction),
+    transparent 50%,
+    var(--rdp-range_middle-background-color) 50%
+  ); /* Used for the background of the start of the selected range. */
+  --rdp-range_start-date-background-color: var(
+    --rdp-accent-color
+  ); /* The background color of the date when at the start of the selected range. */
+
+  --rdp-range_end-background: linear-gradient(
+    var(--rdp-gradient-direction),
+    var(--rdp-range_middle-background-color) 50%,
+    transparent 50%
+  ); /* Used for the background of the end of the selected range. */
+  --rdp-range_end-color: white; /* The color of the range text. */
+  --rdp-range_end-date-background-color: var(
+    --rdp-accent-color
+  ); /* The background color of the date when at the end of the selected range. */
+
+  --rdp-week_number-border-radius: 100%; /* The border radius of the week number. */
+  --rdp-week_number-border: 2px solid transparent; /* The border of the week number. */
+
+  --rdp-week_number-height: var(
+    --rdp-day-height
+  ); /* The height of the week number cells. */
+  --rdp-week_number-opacity: 0.75; /* The opacity of the week number. */
+  --rdp-week_number-width: var(
+    --rdp-day-width
+  ); /* The width of the week number cells. */
+  --rdp-weeknumber-text-align: center; /* The text alignment of the weekday cells. */
+
+  --rdp-weekday-opacity: 0.75; /* The opacity of the weekday. */
+  --rdp-weekday-padding: 0.5rem 0rem; /* The padding of the weekday. */
+  --rdp-weekday-text-align: center; /* The text alignment of the weekday cells. */
+
+  --rdp-gradient-direction: 90deg;
+  position: relative; /* Required to position the navigation toolbar. */
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: black;
+  padding: 0.75rem;
+  &[dir="rtl"] {
+    --rdp-gradient-direction: -90deg;
+  }
+
+  &[data-broadcast-calendar="true"] {
+    --rdp-outside-opacity: unset;
+  }
+
+  & * {
+    box-sizing: border-box;
+  }
+
+  .rdp-day {
+    width: var(--rdp-day-width);
+    height: var(--rdp-day-height);
+    text-align: center;
+  }
+
+  .rdp-day_button {
+    background: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    width: var(--rdp-day_button-width);
+    height: var(--rdp-day_button-height);
+    border: var(--rdp-day_button-border);
+    border-radius: var(--rdp-day_button-border-radius);
+  }
+
+  .rdp-day_button:disabled {
+    cursor: revert;
+  }
+
+  .rdp-caption_label {
+    z-index: 1;
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .rdp-dropdown:focus-visible ~ .rdp-caption_label {
+    outline: 5px auto Highlight;
+    outline: 5px auto -webkit-focus-ring-color;
+  }
+
+  .rdp-button_next,
+  .rdp-button_previous {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    appearance: none;
+
+    width: var(--rdp-nav_button-width);
+    height: var(--rdp-nav_button-height);
+  }
+
+  .rdp-button_next:disabled,
+  .rdp-button_previous:disabled {
+    cursor: revert;
+
+    opacity: var(--rdp-nav_button-disabled-opacity);
+  }
+
+  .rdp-chevron {
+    display: inline-block;
+    fill: var(--rdp-accent-color);
+  }
+
+  &[dir="rtl"] .rdp-nav .rdp-chevron {
+    transform: rotate(180deg);
+  }
+
+  &[dir="rtl"] .rdp-nav .rdp-chevron {
+    transform: rotate(180deg);
+    transform-origin: 50%;
+  }
+
+  .rdp-dropdowns {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--rdp-dropdown-gap);
+  }
+  .rdp-dropdown {
+    z-index: 2;
+
+    /* Reset */
+    opacity: 0;
+    appearance: none;
+    position: absolute;
+    inset-block-start: 0;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    cursor: inherit;
+    border: none;
+    line-height: inherit;
+  }
+
+  .rdp-dropdown_root {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .rdp-dropdown_root[data-disabled="true"] .rdp-chevron {
+    opacity: var(--rdp-disabled-opacity);
+  }
+
+  .rdp-month_caption {
+    display: flex;
+    align-content: center;
+    height: var(--rdp-nav-height);
+    font-weight: bold;
+    font-size: large;
+  }
+
+  .rdp-months {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--rdp-months-gap);
+    max-width: fit-content;
+  }
+
+  .rdp-month_grid {
+    border-collapse: collapse;
+  }
+
+  .rdp-nav {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+
+    display: flex;
+    align-items: center;
+
+    height: var(--rdp-nav-height);
+  }
+
+  .rdp-weekday {
+    opacity: var(--rdp-weekday-opacity);
+    padding: var(--rdp-weekday-padding);
+    font-weight: 500;
+    font-size: smaller;
+    text-align: var(--rdp-weekday-text-align);
+    text-transform: var(--rdp-weekday-text-transform);
+  }
+
+  .rdp-week_number {
+    opacity: var(--rdp-week_number-opacity);
+    font-weight: 400;
+    font-size: small;
+    height: var(--rdp-week_number-height);
+    width: var(--rdp-week_number-width);
+    border: var(--rdp-week_number-border);
+    border-radius: var(--rdp-week_number-border-radius);
+    text-align: var(--rdp-weeknumber-text-align);
+  }
+
+  /* DAY MODIFIERS */
+  .rdp-today:not(.rdp-outside) {
+    color: var(--rdp-today-color);
+  }
+
+  .rdp-selected {
+    font-weight: bold;
+    font-size: large;
+  }
+
+  .rdp-selected .rdp-day_button {
+    border: var(--rdp-selected-border);
+  }
+
+  .rdp-outside {
+    opacity: var(--rdp-outside-opacity);
+  }
+
+  .rdp-disabled {
+    opacity: var(--rdp-disabled-opacity);
+  }
+
+  .rdp-hidden {
+    visibility: hidden;
+    color: var(--rdp-range_start-color);
+  }
+
+  .rdp-range_start {
+    background: var(--rdp-range_start-background);
+  }
+
+  .rdp-range_start .rdp-day_button {
+    background-color: var(--rdp-range_start-date-background-color);
+    color: var(--rdp-range_start-color);
+  }
+
+  .rdp-range_middle {
+    background-color: var(--rdp-range_middle-background-color);
+  }
+
+  .rdp-range_middle .rdp-day_button {
+    border-color: transparent;
+    border: unset;
+    border-radius: unset;
+    color: var(--rdp-range_middle-color);
+  }
+
+  .rdp-range_end {
+    background: var(--rdp-range_end-background);
+    color: var(--rdp-range_end-color);
+  }
+
+  .rdp-range_end .rdp-day_button {
+    color: var(--rdp-range_start-color);
+    background-color: var(--rdp-range_end-date-background-color);
+  }
+
+  .rdp-range_start.rdp-range_end {
+    background: revert;
+  }
+
+  .rdp-focusable {
+    cursor: pointer;
+  }
+}
+
+// @import "@radix-ui/colors/black-alpha.css";
+// @import "@radix-ui/colors/mauve.css";
+// @import "@radix-ui/colors/violet.css";
+
+
+
+.cb-SelectTrigger {
+	display: inline-flex;
+  text-align: left;
+  align-items: center;
+  width: 100%;
+  border: solid 1px hsl(var(--chatbot-border));
+  justify-content: space-between;
+	border-radius: 4px;
+	padding: 15px 15px !important;
+	font-size: 13px;
+	line-height: 1;
+	height: 35px;
+	gap: 5px;
+	background-color: white;
+	color: black;
+}
+.cb-SelectTrigger:hover {
+	background-color: hsl(var(--chatbot-accent));
+}
+.cb-SelectTrigger:focus {
+	box-shadow: 0 0 0 2px black;
+}
+.cb-SelectTrigger[data-placeholder] {
+	color: black;
+}
+
+.cb-SelectIcon {
+	color: black;
+}
+
+.cb-SelectContent {
+	overflow: hidden;
+  z-index: 1000;
+	background-color: white;
+  width: var(--radix-popper-anchor-width);
+	border-radius: 6px;
+	box-shadow:
+		0px 10px 38px -10px rgba(22, 23, 24, 0.35),
+		0px 10px 20px -15px rgba(22, 23, 24, 0.2);
+}
+
+.cb-SelectViewport {
+	padding: 5px;
+}
+
+.cb-SelectItem {
+	font-size: 13px;
+	line-height: 1;
+	color: black;
+	border-radius: 3px;
+	display: flex;
+	align-items: center;
+	height: 25px;
+	padding: 0 35px 0 25px;
+	position: relative;
+	user-select: none;
+  cursor: pointer;
+  &:hover {
+    background-color: hsl(var(--chatbot-accent));
+  }
+}
+.cb-SelectItem[data-disabled] {
+	color: gray;
+	pointer-events: none;
+}
+.cb-SelectItem[data-highlighted] {
+	outline: none;
+}
+
+.cb-SelectLabel {
+	padding: 0 25px;
+	font-size: 12px;
+	line-height: 25px;
+	color: black;
+}
+
+.cb-SelectSeparator {
+	height: 1px;
+	background-color:white;
+	margin: 5px;
+}
+
+.cb-SelectItemIndicator {
+	position: absolute;
+	left: 0;
+	width: 25px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.cb-SelectScrollButton {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 25px;
+	background-color: white;
+	color: black;
+	cursor: default;
+}
+

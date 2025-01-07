@@ -1,4 +1,4 @@
-import {
+import React, {
   Dispatch,
   SetStateAction,
   createContext,
@@ -26,7 +26,7 @@ export function VillageContextProvider({
   children: React.ReactNode;
 }) {
   // const [messages, setMessages] = useState<TMessage[]>([]);
-  const [villageId, setVillageId] = useState<string | null>(null);
+  const [villageId, setVillageId] = React.useState<string | null>(null);
   const [user, setUser] = useState<TUser | null>(null);
   return (
     <VillageContext.Provider value={{ villageId, setVillageId, user, setUser }}>

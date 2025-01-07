@@ -1,5 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
+
+
 export function getContrast(hexColor: string) {
   // Convert hex color to RGB
   let r = parseInt(hexColor.substring(1, 3), 16);

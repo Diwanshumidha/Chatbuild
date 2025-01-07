@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "../components/ui/button";
 import { IoClose } from "react-icons/io5";
 import { TChatBoxDetails, WidgetProps } from "./types";
@@ -12,7 +12,6 @@ import { useSuggestions } from "../hooks/use-suggestion-context";
 import { SiChatbot } from "react-icons/si";
 import { useVillageStore } from "../context/village-context";
 
-
 const Widget = ({
   apiKey,
   showWelcomeBox = true,
@@ -21,7 +20,7 @@ const Widget = ({
   textColor,
   themeColor,
 }: WidgetProps) => {
-  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+  const [isChatbotOpen, setIsChatbotOpen] = React.useState(false);
   const [isWelcomeBoxOpen, setIsWelcomeBoxOpen] = useState(true);
   const [chatbotDetails, setChatbotDetails] = useState<null | TChatBoxDetails>(
     null
@@ -30,7 +29,7 @@ const Widget = ({
   const { resetThread } = useThread();
   const { setSuggestion } = useSuggestions();
   const { setVillageId } = useVillageStore();
-
+  console.log(chatbotDetails);
   useEffect(() => {
     const fetchBot = async function () {
       console.log(BASE_PATH + "/chatbot");
@@ -89,7 +88,10 @@ const Widget = ({
   const Icon = icon ? icon : SiChatbot;
 
   return (
-    <div className="chatbot-widget chatbot-widget--fixed-position cb-transition-all" style={widgetStyles as React.CSSProperties}>
+    <div
+      className="chatbot-widget chatbot-widget--fixed-position cb-transition-all"
+      style={widgetStyles as React.CSSProperties}
+    >
       {isWelcomeBoxOpen && !isChatbotOpen && showWelcomeBox ? (
         <WelcomeBox
           setIsChatbotOpen={setIsChatbotOpen}
@@ -115,6 +117,7 @@ const Widget = ({
       </Button>
       {isChatbotOpen ? (
         <Chatbot
+          widgetStyles={widgetStyles}
           resetChat={resetChat}
           chatbotDetails={chatbotDetails}
           handleChatBoxClose={handleChatBoxClose}

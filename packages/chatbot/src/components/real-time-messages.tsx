@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { TAgent, useAgentStore } from "../context/village-context";
 import { cn } from "../lib/utils";
 import { motion } from "framer-motion";
@@ -35,7 +35,7 @@ const Message = ({
   message: TMessage;
   agent: TAgent | null;
 }) => {
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const messagesEndRef = React.useRef<HTMLDivElement | null>(null);
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: 'nearest' });
   };
