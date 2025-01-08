@@ -1,6 +1,6 @@
 {
   "name": "@chatbuild/widget",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A chat widget for integrating ChatBuild.io into React and NextJs Apps apps.",
   "main": "dist/index.js",
   "types": "dist/main.d.ts",
