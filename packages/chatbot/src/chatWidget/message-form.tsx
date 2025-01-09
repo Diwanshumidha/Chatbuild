@@ -30,6 +30,9 @@ const MessageForm = ({ apiKey, scrollToBottom }: MessageFormProps) => {
           threadId,
           message: message,
           apiKey: apiKey,
+          metadata: {
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          }
         }),
       });
       const data = await response.json();
