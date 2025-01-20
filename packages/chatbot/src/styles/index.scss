@@ -1288,6 +1288,7 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   flex: 1 1 0%;
   width: 100%;
   height: 100%;
+  overflow: auto;
   justify-content: center;
   &__user-details-form {
     padding: 1rem /* 16px */;
@@ -1534,6 +1535,7 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   flex: 1 1 0%;
   width: 100%;
   height: 100%;
+  overflow: auto;
   justify-content: center;
   &__user-details-form {
     padding: 1rem /* 16px */;
